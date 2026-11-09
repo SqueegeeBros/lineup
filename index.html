@@ -412,7 +412,8 @@ function updateSelBox(tmp){
 // Problems we can spot before even asking for the camera
 function camEnvProblem(){
   const ua=navigator.userAgent||"";
-  const inApp=/Claude|FBAN|FBAV|Instagram|Snapchat|Line\/|; wv\)|GSA\//i.test(ua);
+  const ourApp=/SBLineupApp/.test(ua)||!!window.SBAndroid;
+  const inApp=!ourApp&&/Claude|FBAN|FBAV|Instagram|Snapchat|Line\/|; wv\)|GSA\//i.test(ua);
   if(!window.isSecureContext)return "This page has to be opened from its https link.";
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||inApp)
     return "This browser won't give the page the camera. It's probably the browser built into another app. Open <b>squeegeebros.github.io/lineup</b> in <b>Safari</b> (iPhone) or <b>Chrome</b> (Android).";
@@ -616,7 +617,12 @@ function buildResult(){
 function setCmp(v){$("#cmpBefore").style.clipPath="inset(0 "+(100-v)+"% 0 0)";$("#cmpHandle").style.left="calc("+v+"% - 1.5px)";}
 async function download(){
   if(!finalBlob)return;
-  const name="squeegee-bros-before-after-"+(S.job||"job")+".jpg";
+  const stamp=new Date().toISOString().slice(0,16).replace(/[-:T]/g,"");
+  const name="squeegee-bros-before-after-"+(S.job||"job")+"-"+stamp+".jpg";
+  if(window.SBAndroid&&window.SBAndroid.saveAndShare){
+    const b64=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(String(fr.result).split(",")[1]);fr.readAsDataURL(finalBlob);});
+    window.SBAndroid.saveAndShare(b64,name);return;
+  }
   const file=new File([finalBlob],name,{type:"image/jpeg"});
   // On phones, the share sheet lets you save to Photos or send it straight to a customer
   if(navigator.canShare&&navigator.canShare({files:[file]})){
@@ -676,6 +682,14 @@ $("#resAdjust").onclick=()=>{show("stepAlign");renderAlign();};
 $("#restart").onclick=()=>{location.hash="";location.reload();};
 
 if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("./sw.js").catch(()=>{});}
+// Android back button: step back one screen. Returns false on the first screen so the app can close.
+window.sbBack=function(){
+  const cur=(document.querySelector(".step.active")||{}).id;
+  if(cur==="stepCam"){$("#camCancel").click();return true;}
+  const prev={stepBefore:"stepJob",stepBeforeReview:"stepBefore",stepAfter:"stepBeforeReview",stepAlign:"stepAfter",stepResult:"stepAlign"}[cur];
+  if(prev){show(prev);if(prev==="stepAlign")renderAlign();return true;}
+  return false;
+};
 // test hook
 window.__lineup={S,setBefore,setAfter,matchScore,search,show,buildResult,computeFocus,_edges:c=>frameEdges(c,null)};
 })();

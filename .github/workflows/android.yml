@@ -1,0 +1,60 @@
+name: Build Android app
+
+on:
+  push:
+    branches: [main]
+    paths: ['android/**', '.github/workflows/android.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      # Uses the permanent key from repo secrets if it has been added (Settings > Secrets > Actions:
+      # SIGNING_KEY = base64 of the .jks, SIGNING_PASS = its password, alias "sblineup").
+      # Without it, a one-off key is made for this build, so a new APK has to replace the old one by uninstalling first.
+      - name: Prepare signing key
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASS: ${{ secrets.SIGNING_PASS }}
+        run: |
+          if [ -n "$SIGNING_KEY" ] && [ -n "$SIGNING_PASS" ]; then
+            echo "$SIGNING_KEY" | base64 -d > "$RUNNER_TEMP/release.jks"
+            echo "KS_PASS=$SIGNING_PASS" >> "$GITHUB_ENV"
+          else
+            P=$(openssl rand -hex 16)
+            echo "::add-mask::$P"
+            keytool -genkeypair -keystore "$RUNNER_TEMP/release.jks" -alias sblineup -keyalg RSA -keysize 2048 \
+              -validity 10000 -storepass "$P" -keypass "$P" -dname "CN=Squeegee Bros, O=Squeegee Bros Window Cleaning, C=US"
+            echo "KS_PASS=$P" >> "$GITHUB_ENV"
+          fi
+          echo "KS_PATH=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+
+      - name: Build APK
+        working-directory: android
+        run: gradle assembleRelease --no-daemon --stacktrace
+
+      - name: Publish download
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk SB-Lineup.apk
+          if ! gh release view app >/dev/null 2>&1; then
+            gh release create app --title "SB Lineup for Android" \
+              --notes "Download SB-Lineup.apk below, open it, and tap Install." --latest
+          fi
+          gh release upload app SB-Lineup.apk --clobber
