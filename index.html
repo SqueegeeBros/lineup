@@ -3,6 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1f33">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SB Lineup">
 <title>Squeegee Bros · Before/After Lineup (Test)</title>
 <style>
 :root{--navy:#0b1f33;--navy2:#13304d;--blue:#1e88e5;--sky:#00e5ff;--bg:#f2f5f9;--card:#fff;--ink:#0f172a;--muted:#5b6b7f;--line:#dbe3ec;--ok:#16a34a;--warn:#f59e0b;--bad:#dc2626}
@@ -72,7 +78,7 @@ p.lead{margin:0 0 14px;color:var(--muted);font-size:15px}
 <body>
 <header>
   <div class="brand">Squeegee Bros · Before/After Lineup</div>
-  <div class="sub">Test version · one shot</div>
+  <div class="sub">Test version</div>
   <div class="stepper"><span id="s1" class="on"></span><span id="s2"></span><span id="s3"></span><span id="s4"></span></div>
 </header>
 
@@ -669,6 +675,7 @@ $("#dlBtn").onclick=download;
 $("#resAdjust").onclick=()=>{show("stepAlign");renderAlign();};
 $("#restart").onclick=()=>{location.hash="";location.reload();};
 
+if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js").catch(()=>{});}
 // test hook
 window.__lineup={S,setBefore,setAfter,matchScore,search,show,buildResult,computeFocus,_edges:c=>frameEdges(c,null)};
 })();
