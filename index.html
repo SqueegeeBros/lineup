@@ -2,260 +2,271 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b1f33">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#000000">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SB Lineup">
-<title>Squeegee Bros · Before/After Lineup (Test)</title>
+<title>SB Lineup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#0b1f33;--navy2:#13304d;--blue:#1e88e5;--sky:#00e5ff;--bg:#f2f5f9;--card:#fff;--ink:#0f172a;--muted:#5b6b7f;--line:#dbe3ec;--ok:#16a34a;--warn:#f59e0b;--bad:#dc2626}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
-header{background:var(--navy);color:#fff;padding:14px 16px 12px}
-header .brand{font-weight:700;letter-spacing:.2px;font-size:17px}
-header .sub{opacity:.75;font-size:13px}
-.stepper{display:flex;gap:6px;margin-top:10px}
-.stepper span{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.22)}
-.stepper span.on{background:var(--sky)}
-main{max-width:720px;margin:0 auto;padding:16px}
-.step{display:none}.step.active{display:block}
-h2{font-size:20px;margin:4px 0 4px}
-p.lead{margin:0 0 14px;color:var(--muted);font-size:15px}
-.chips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.chip{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 12px;font-weight:600;font-size:15px;text-align:left;color:var(--ink);cursor:pointer}
-.chip.on{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,136,229,.15)}
-.shots{display:flex;flex-direction:column;gap:10px;margin-top:16px}
-.shot{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
-.shot.on{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,136,229,.15)}
-.shot .t{font-weight:700;display:flex;justify-content:space-between;gap:8px}
-.shot .n{color:var(--blue);font-size:13px;font-weight:700}
-.shot .a{margin-top:4px;font-size:14.5px}
-.shot .w,.shot .tip{margin-top:4px;font-size:13.5px;color:var(--muted)}
-.shot .tip b{color:var(--ink)}
-.tips{margin-top:16px;background:#e8f1fb;border-radius:12px;padding:12px 14px;font-size:14px}
-.tips ul{margin:6px 0 0;padding-left:18px}
-.btn{display:block;width:100%;border:0;border-radius:12px;padding:15px 16px;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px;text-align:center}
-.btn.pri{background:var(--blue);color:#fff}
-.btn.sec{background:var(--card);color:var(--ink);border:1.5px solid var(--line)}
-.btn:disabled{opacity:.45}
-.row{display:flex;gap:10px}.row .btn{flex:1}
-.note{font-size:13.5px;color:var(--muted);margin-top:10px}
-.alert{background:#fff7e6;border:1px solid #f6d48a;border-radius:12px;padding:12px 14px;font-size:14px;margin-top:12px;display:none}
-.stage{position:relative;margin:0 auto;background:#000;border-radius:14px;overflow:hidden;width:min(100%,calc(66vh * var(--a,0.75)));aspect-ratio:var(--a,0.75);touch-action:none}
-.stage video,.stage canvas,.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.stage .ol{filter:drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000);pointer-events:none}
-.stage .ghost{pointer-events:none}
-.hud{position:absolute;left:10px;right:10px;top:10px;display:flex;flex-direction:column;gap:6px;pointer-events:none}
-.meter{background:rgba(11,31,51,.78);color:#fff;border-radius:10px;padding:8px 10px;font-size:14px;font-weight:600}
-.meter .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.2);margin-top:6px;overflow:hidden}
-.meter .fill{height:100%;width:0;background:var(--bad);transition:width .2s,background .2s}
-.hint{align-self:center;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:6px 12px;font-size:14px;font-weight:600}
-.shutter{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:68px;height:68px;border-radius:50%;border:4px solid #fff;background:rgba(255,255,255,.25);cursor:pointer}
-.shutter:active{background:rgba(255,255,255,.6)}
-.shutter.go{border-color:#4ade80;box-shadow:0 0 0 4px rgba(74,222,128,.45)}
-.ctrls{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-top:12px}
-.ctrl{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:14px}
-.ctrl label{width:74px;color:var(--muted)}
-.ctrl input[type=range]{flex:1}
-.toggles{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-.tg{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600;cursor:pointer}
-.tg.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-.score{font-weight:700}
-.cmp-handle{position:absolute;top:0;bottom:0;width:3px;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.6);pointer-events:none}
-.tag{position:absolute;top:10px;background:rgba(11,31,51,.8);color:#fff;font-size:12px;font-weight:700;letter-spacing:1px;padding:4px 8px;border-radius:6px;pointer-events:none}
-#finalImg{width:100%;border-radius:12px;margin-top:12px;display:block;border:1px solid var(--line)}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
-.toast.show{opacity:1}
-.camstatus{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:16px;text-align:center;padding:20px;background:#000}
+:root{--panel:176px;--amber:#FFB800;--green:#2FD27A;--red:#FF5A4E;--cyan:#00C2FF;--gold:#FFD24D;--ink:#0b0f14}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;color:#fff;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;overscroll-behavior:none;user-select:none;-webkit-user-select:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hidden{display:none!important}
-.selbox{position:absolute;border:2px dashed #fff;border-radius:4px;box-shadow:0 0 0 9999px rgba(0,0,0,.38);pointer-events:none}
-#revStage{cursor:crosshair}
+.glass{background:rgba(16,22,30,.58);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border:1px solid rgba(255,255,255,.10)}
+
+/* ---------- camera stage ---------- */
+#stage{position:fixed;left:0;right:0;top:0;bottom:var(--panel);overflow:hidden;background:#05070a;border-radius:0 0 26px 26px}
+#stage video,#stage .ov{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+#ghost{opacity:.3;pointer-events:none}
+#outline{pointer-events:none;filter:drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000)}
+.vig{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 24%,rgba(0,0,0,0) 78%,rgba(0,0,0,.35) 100%)}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;transition:opacity .25s}
+#flash.on{opacity:.85;transition:none}
+
+#top{position:absolute;top:12px;left:12px;right:12px;z-index:3}
+#pill{width:100%;border-radius:20px;padding:11px 14px 11px 11px;display:flex;align-items:center;gap:12px;text-align:left;transition:background .25s}
+#pill .ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none;transition:background .25s}
+#pill .txt{min-width:0;flex:1}
+#pill .lbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+#pill .msg{font-size:17px;font-weight:650;font-weight:600;letter-spacing:-.01em;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#pill .chev{color:rgba(255,255,255,.45);flex:none}
+#pill .bar{height:4px;border-radius:2px;background:rgba(255,255,255,.15);margin-top:7px;overflow:hidden}
+#pill .bar i{display:block;height:100%;width:0;border-radius:2px;background:var(--amber);transition:width .2s,background .2s}
+.chips{display:flex;gap:6px;margin-top:8px;justify-content:center}
+.chip{border-radius:999px;padding:6px 11px 6px 9px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);transition:background .2s}
+.dot.good{background:var(--green)}.dot.warn{background:var(--amber)}.dot.bad{background:var(--red)}
+
+#level{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;z-index:2}
+#level .ref{position:absolute;left:-150px;width:300px;top:-1px;height:2px}
+#level .ref::before,#level .ref::after{content:"";position:absolute;top:0;width:18px;height:2px;background:rgba(255,255,255,.8);border-radius:2px}
+#level .ref::before{left:0}#level .ref::after{right:0}
+#level .line{position:absolute;left:-125px;top:-1px;width:250px;height:2px;transition:transform .08s linear}
+#level .line::before,#level .line::after{content:"";position:absolute;top:0;height:2px;width:92px;border-radius:2px;background:var(--lc,var(--amber));box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+#level .line::before{left:0}#level .line::after{right:0}
+#level .deg{position:absolute;top:14px;left:0;transform:translateX(-50%);font-size:13px;font-weight:700;color:var(--lc,var(--amber));padding:4px 9px;border-radius:999px;white-space:nowrap}
+
+#brk{position:absolute;pointer-events:none;transition:left .25s,top .25s,width .25s,height .25s;z-index:2}
+#brk b{position:absolute;width:22px;height:22px;border-color:#fff;border-style:solid;filter:drop-shadow(0 0 2px rgba(0,0,0,.6))}
+#brk.locked b{border-color:var(--cyan)}
+#brk .a{left:0;top:0;border-width:2.5px 0 0 2.5px;border-radius:6px 0 0 0}
+#brk .b{right:0;top:0;border-width:2.5px 2.5px 0 0;border-radius:0 6px 0 0}
+#brk .c{left:0;bottom:0;border-width:0 0 2.5px 2.5px;border-radius:0 0 0 6px}
+#brk .d{right:0;bottom:0;border-width:0 2.5px 2.5px 0;border-radius:0 0 6px 0}
+
+#hint{position:absolute;left:0;right:0;bottom:16px;text-align:center;font-size:13px;font-weight:500;color:rgba(255,255,255,.88);text-shadow:0 1px 3px rgba(0,0,0,.8);pointer-events:none;z-index:2}
+#lockChip{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;z-index:3}
+#lockChip .x{opacity:.7}
+#ghostBtn{position:absolute;right:12px;bottom:12px;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:3}
+#ghostBtn span{position:absolute;bottom:-2px;right:-2px;font-size:10px;font-weight:800;background:#fff;color:#000;border-radius:8px;padding:1px 4px}
+
+#camMsg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:30px;text-align:center;z-index:4;background:#05070a}
+#camMsg .box{max-width:320px}
+#camMsg h3{font-size:19px;font-weight:700;margin-bottom:8px}
+#camMsg p{font-size:14.5px;color:rgba(255,255,255,.7);line-height:1.45}
+#camMsg .btn{margin-top:18px}
+.spinner{width:30px;height:30px;border-radius:50%;border:3px solid rgba(255,255,255,.2);border-top-color:#fff;animation:spin 0.9s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- bottom panel ---------- */
+#panel{position:fixed;left:0;right:0;bottom:0;height:var(--panel);padding:0 26px;background:#000}
+.modes{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.modes button{font-size:13px;font-weight:700;letter-spacing:.09em;color:rgba(255,255,255,.5);padding:6px 10px;border-radius:999px;transition:color .2s,background .2s}
+.modes button.on{color:var(--gold);background:rgba(255,210,77,.1)}
+.row{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.slot{width:68px;display:flex;flex-direction:column;align-items:center}
+.stack{position:relative;width:60px;height:60px}
+.stack .t{position:absolute;width:52px;height:52px;border-radius:13px;border:2px solid rgba(255,255,255,.92);background:#1a222c center/cover no-repeat}
+.stack .t1{left:7px;top:0;transform:rotate(7deg);opacity:.75}
+.stack .t2{left:0;top:7px}
+.stack.empty .t{border-style:dashed;border-color:rgba(255,255,255,.3);background:none}
+.badge{position:absolute;right:-6px;top:-6px;background:var(--cyan);color:#00131d;font-size:12px;font-weight:800;min-width:22px;height:22px;padding:0 5px;border-radius:11px;display:flex;align-items:center;justify-content:center;border:2px solid #000}
+.cap{font-size:11px;font-weight:600;color:rgba(255,255,255,.72);margin-top:7px;white-space:nowrap}
+#shutter{width:82px;height:82px;border-radius:50%;border:4px solid #fff;display:flex;align-items:center;justify-content:center;transition:border-color .2s,transform .1s}
+#shutter i{width:64px;height:64px;border-radius:50%;background:#fff;transition:background .2s,transform .1s}
+#shutter:active i{transform:scale(.9)}
+#shutter.go{border-color:var(--green)}
+#shutter.go i{background:#eafff2}
+.round{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+
+/* ---------- sheets ---------- */
+#sheetWrap{position:fixed;inset:0;z-index:20}
+#sheetWrap .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45);animation:fade .2s}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:86vh;overflow:auto;border-radius:26px 26px 0 0;padding:10px 20px 28px;background:rgba(18,24,32,.9);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,255,255,.1);animation:up .26s cubic-bezier(.2,.9,.3,1)}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+@keyframes fade{from{opacity:0}}
+.grab{width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin:0 auto 14px}
+.sh-title{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.sh-sub{font-size:14px;color:rgba(255,255,255,.6);margin-top:3px}
+.bubble{display:block;margin:18px auto 10px}
+.checks{margin-top:8px}
+.check{display:flex;gap:12px;padding:12px 0;border-top:1px solid rgba(255,255,255,.08)}
+.check .dot{width:10px;height:10px;margin-top:6px;flex:none}
+.check .ct{font-size:15px;font-weight:600}
+.check .cd{font-size:13.5px;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.4}
+.check .cv{margin-left:auto;font-size:14px;font-weight:700;color:rgba(255,255,255,.85);white-space:nowrap;padding-left:8px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.cell{position:relative;border-radius:14px;overflow:hidden;background:#1a222c;aspect-ratio:3/4}
+.cell img{width:100%;height:100%;object-fit:cover;display:block}
+.cell .time{position:absolute;left:6px;bottom:6px;font-size:11.5px;font-weight:700;background:rgba(0,0,0,.55);padding:2px 7px;border-radius:999px}
+.cell .del{position:absolute;right:5px;top:5px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center}
+.grid.two{grid-template-columns:repeat(2,1fr)}
+.cell.wide{aspect-ratio:4/3;background:#0b1f33}
+.cell.wide img{object-fit:contain}
+.empty{padding:30px 10px;text-align:center;color:rgba(255,255,255,.6);font-size:14.5px}
+.tipline{font-size:13px;color:rgba(255,255,255,.55);margin-top:14px;line-height:1.45}
+
+/* ---------- full-screen views ---------- */
+.view{position:fixed;inset:0;z-index:30;background:#000;display:flex;flex-direction:column;animation:fade .2s}
+.vhead{display:flex;align-items:center;justify-content:space-between;padding:12px 12px 6px}
+.vhead .title{font-size:16px;font-weight:700}
+.icon-btn{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.text-btn{height:40px;padding:0 14px;border-radius:999px;font-weight:700;font-size:15px}
+.text-btn.pri{color:var(--gold)}
+.cmpArea{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:6px 14px}
+.cmp{position:relative;border-radius:18px;overflow:hidden;touch-action:none;background:#111;max-width:100%;max-height:100%}
+.cmp canvas{display:block;width:100%;height:100%}
+.cmp #cmpB{position:absolute;inset:0}
+.knobline{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 6px rgba(0,0,0,.5);pointer-events:none}
+.knob{position:absolute;top:50%;left:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.4);pointer-events:none}
+.tag{position:absolute;top:12px;font-size:11px;font-weight:800;letter-spacing:.1em;padding:5px 9px;border-radius:999px;pointer-events:none}
+.tag.l{left:12px}.tag.r{right:12px}
+#sideImg{max-width:100%;max-height:100%;border-radius:14px;display:block}
+.seg{display:flex;align-self:center;background:rgba(255,255,255,.08);border-radius:999px;padding:3px;margin:10px 0 4px}
+.seg button{padding:8px 16px;border-radius:999px;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.65)}
+.seg button.on{background:rgba(255,255,255,.16);color:#fff}
+.actions{padding:10px 16px 22px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:54px;border-radius:16px;font-size:16.5px;font-weight:700}
+.btn.pri{background:#fff;color:#000}
+.btn.sec{background:rgba(255,255,255,.1);color:#fff}
+.btn2{display:flex;gap:10px;margin-top:10px}
+.btn2 .btn{height:48px;font-size:15px}
+.adjArea{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:6px 14px}
+#adjCanvas{max-width:100%;max-height:100%;border-radius:16px;touch-action:none;display:block}
+.adjCtl{padding:8px 20px 22px}
+.ctl{display:flex;align-items:center;gap:12px;margin:10px 0;font-size:14px}
+.ctl label{width:64px;color:rgba(255,255,255,.6);font-weight:500}
+.ctl input{flex:1;accent-color:#fff}
+.ctl .v{width:48px;text-align:right;font-weight:700}
+
+#toast{position:fixed;left:50%;top:calc(50% - 30px);transform:translate(-50%,-50%) scale(.96);background:rgba(16,22,30,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:12px 18px;border-radius:16px;font-size:15px;font-weight:600;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:50;text-align:center;max-width:80vw}
+#toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#busy{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:600}
 </style>
 </head>
 <body>
-<header>
-  <div class="brand">Squeegee Bros · Before/After Lineup</div>
-  <div class="sub">Test version</div>
-  <div class="stepper"><span id="s1" class="on"></span><span id="s2"></span><span id="s3"></span><span id="s4"></span></div>
-</header>
 
-<main>
-  <div class="alert" id="envBanner"></div>
-  <!-- STEP 1: job + shot -->
-  <section class="step active" id="stepJob">
-    <h2>What's the job?</h2>
-    <p class="lead">Pick the service and you'll get the shots that sell it best.</p>
-    <div class="chips" id="chips"></div>
-    <div id="shotWrap" class="hidden">
-      <h2 style="margin-top:20px">Recommended shots</h2>
-      <p class="lead">For this test, pick one to try.</p>
-      <div class="shots" id="shots"></div>
-      <div class="tips"><b>For every lineup</b>
-        <ul>
-          <li>Stay on 1× zoom. Zooming changes the perspective, so the shots won't line up.</li>
-          <li>Pick a landmark to stand on, like a sidewalk crack or a sprinkler head.</li>
-          <li>Flash off. Try to shoot at the same time of day.</li>
-        </ul>
-      </div>
-      <button class="btn pri" id="toBefore" disabled>Next: before photo</button>
+<!-- ================= CAMERA ================= -->
+<div id="stage">
+  <video id="video" playsinline muted autoplay></video>
+  <canvas id="ghost" class="ov hidden"></canvas>
+  <canvas id="outline" class="ov hidden"></canvas>
+  <div class="vig"></div>
+
+  <div id="brk" class="hidden"><b class="a"></b><b class="b"></b><b class="c"></b><b class="d"></b></div>
+  <div id="level" class="hidden"><div class="ref"></div><div class="line" id="lvLine"></div><div class="deg glass" id="lvDeg">0°</div></div>
+
+  <div id="top">
+    <button id="pill" class="glass" aria-label="Suggested angle, tap for guide">
+      <span class="ico" id="pIco"></span>
+      <span class="txt"><span class="lbl" id="pLbl">Suggested angle</span><span class="msg" id="pMsg" style="display:block">Starting camera…</span><span class="bar hidden" id="pBar"><i></i></span></span>
+      <svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <div class="chips">
+      <div class="chip glass"><span class="dot" id="c1d"></span><span id="c1">Level</span></div>
+      <div class="chip glass"><span class="dot" id="c2d"></span><span id="c2">Framing</span></div>
+      <div class="chip glass"><span class="dot" id="c3d"></span><span id="c3">Light</span></div>
     </div>
-  </section>
+  </div>
 
-  <!-- STEP 2: before -->
-  <section class="step" id="stepBefore">
-    <h2>Before photo</h2>
-    <p class="lead" id="beforeShotTxt"></p>
-    <button class="btn pri" id="beforeLive">Open live camera</button>
-    <label class="btn sec" for="beforeFile">Take photo with phone camera</label>
-    <input type="file" id="beforeFile" accept="image/*" capture="environment" class="hidden">
-    <div class="alert" id="beforeAlert"></div>
-    <button class="btn sec" id="backJob">Back</button>
-  </section>
+  <div id="hint">Tap anything to lock onto it</div>
+  <button id="lockChip" class="glass hidden"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00C2FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Locked<span class="x">✕</span></button>
+  <button id="ghostBtn" class="glass hidden" aria-label="Ghost overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><span id="ghostPct">30%</span></button>
 
-  <!-- CAMERA (shared) -->
-  <section class="step" id="stepCam">
-    <h2 id="camTitle">Camera</h2>
-    <p class="lead" id="camLead"></p>
-    <div class="stage" id="camStage">
-      <video id="video" playsinline muted autoplay></video>
-      <img id="camGhost" class="ghost hidden" alt="">
-      <canvas id="camOl" class="ol hidden"></canvas>
-      <div class="hud hidden" id="hud">
-        <div class="meter"><span id="mTxt">Lining up…</span><div class="bar"><div class="fill" id="mFill"></div></div></div>
-        <div class="hint" id="hint">Finding the outline…</div>
-      </div>
-      <div id="camStatus" class="camstatus hidden">Starting camera…</div>
-      <button class="shutter" id="shutter" aria-label="Take photo"></button>
-    </div>
-    <div class="ctrls hidden" id="camCtrls">
-      <div class="ctrl"><label>Ghost</label><input type="range" id="camGhostOp" min="0" max="80" value="20"></div>
-      <div class="toggles"><button class="tg on" id="camTgOl">Outline</button></div>
-    </div>
-    <button class="btn sec" id="camCancel">Cancel</button>
-  </section>
+  <div id="flash"></div>
+  <div id="camMsg">
+    <div class="box"><div class="spinner" id="camSpin"></div><h3 id="camH">Starting camera…</h3><p id="camP"></p>
+      <label class="btn sec hidden" id="camFileBtn" for="fileIn">Use a photo instead</label></div>
+  </div>
+</div>
+<input type="file" id="fileIn" accept="image/*" capture="environment" class="hidden">
 
-  <!-- STEP 2b: before review -->
-  <section class="step" id="stepBeforeReview">
-    <h2>Pick what to line up with</h2>
-    <p class="lead">Drag a box around one solid thing, like the window sill or a door frame. The outline will lock onto it.</p>
-    <div class="stage" id="revStage">
-      <canvas id="revImg"></canvas>
-      <canvas id="revOl" class="ol"></canvas>
-      <div id="selBox" class="selbox hidden"></div>
-    </div>
-    <div class="toggles" style="justify-content:center;margin-top:10px"><button class="tg" id="revWhole">Use whole picture</button><button class="tg on" id="revTg">Outline on</button></div>
-    <p class="note" id="revStatus">Using the whole picture. Drag a box to lock onto one object.</p>
-    <p class="note">Before you start cleaning, look at where you're standing so you can get back to it.</p>
-    <button class="btn pri" id="toAfter">Job done: take after photo</button>
-    <button class="btn sec" id="redoBefore">Retake before</button>
-  </section>
+<div id="panel">
+  <div class="modes"><button id="mBefore" class="on">BEFORE</button><button id="mAfter">AFTER</button></div>
+  <div class="row">
+    <button class="slot" id="stackBtn" aria-label="Photos that need an after">
+      <span class="stack empty" id="stack"><span class="t t1" id="st1"></span><span class="t t2" id="st2"></span><span class="badge hidden" id="stBadge">0</span></span>
+      <span class="cap" id="stCap">Need after</span>
+    </button>
+    <button id="shutter" aria-label="Take photo"><i></i></button>
+    <button class="slot" id="pairsBtn" aria-label="Finished before and afters">
+      <span class="round glass"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="8" height="16" rx="2"/><rect x="13" y="4" width="8" height="16" rx="2"/></svg><span class="badge hidden" id="prBadge" style="background:#fff">0</span></span>
+      <span class="cap">Finished</span>
+    </button>
+  </div>
+</div>
 
-  <!-- STEP 3: after -->
-  <section class="step" id="stepAfter">
-    <h2>After photo</h2>
-    <p class="lead">Go back to the same spot. The live camera shows the before outline on screen so you can match it.</p>
-    <button class="btn pri" id="afterLive">Open lineup camera</button>
-    <label class="btn sec" for="afterFile">Take photo with phone camera</label>
-    <input type="file" id="afterFile" accept="image/*" capture="environment" class="hidden">
-    <div class="alert" id="afterAlert"></div>
-    <button class="btn sec" id="backReview">Back</button>
-  </section>
+<!-- ================= SHEET ================= -->
+<div id="sheetWrap" class="hidden"><div class="backdrop" id="sheetBack"></div><div class="sheet"><div class="grab"></div><div id="sheetBody"></div></div></div>
 
-  <!-- STEP 3b: align -->
-  <section class="step" id="stepAlign">
-    <h2>Fine-tune the match</h2>
-    <p class="lead">Drag to move. The app already did its best automatic match.</p>
-    <div class="stage" id="alStage"><canvas id="alCanvas"></canvas></div>
-    <div class="ctrls">
-      <div class="ctrl"><label>Match</label><span class="score" id="alScore">–</span></div>
-      <div class="ctrl"><label>Zoom</label><input type="range" id="alZoom" min="80" max="125" step="0.5" value="100"></div>
-      <div class="ctrl"><label>Rotate</label><input type="range" id="alRot" min="-6" max="6" step="0.1" value="0"></div>
-      <div class="ctrl"><label>Ghost</label><input type="range" id="alGhost" min="0" max="80" value="40"></div>
-      <div class="toggles"><button class="tg on" id="alTgOl">Outline</button><button class="tg" id="alAuto">Auto-match again</button><button class="tg" id="alReset">Reset</button></div>
-    </div>
-    <button class="btn pri" id="toResult">Looks lined up</button>
-    <button class="btn sec" id="redoAfter">Retake after</button>
-  </section>
+<!-- ================= RESULT ================= -->
+<section id="result" class="view hidden">
+  <div class="vhead">
+    <button class="icon-btn" id="resClose" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="title">Before &amp; After</div>
+    <button class="icon-btn" id="resDel" aria-label="Delete"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
+  </div>
+  <div class="cmpArea" id="cmpArea">
+    <div class="cmp" id="cmp"><canvas id="cmpA"></canvas><canvas id="cmpB"></canvas><div class="knobline" id="knobLine"></div><div class="knob" id="knob"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-5 6 5 6M15 6l5 6-5 6"/></svg></div><span class="tag l glass">BEFORE</span><span class="tag r glass">AFTER</span></div>
+    <img id="sideImg" class="hidden" alt="Share image">
+  </div>
+  <div class="seg"><button class="on" id="vSlider">Slider</button><button id="vSide">Share image</button></div>
+  <div class="actions">
+    <button class="btn pri" id="shareBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg>Save &amp; share</button>
+    <div class="btn2"><button class="btn sec" id="adjBtn">Adjust</button><button class="btn sec" id="retakeBtn">Retake after</button></div>
+  </div>
+</section>
 
-  <!-- STEP 4: result -->
-  <section class="step" id="stepResult">
-    <h2>Before &amp; after</h2>
-    <p class="lead">Drag the slider to compare.</p>
-    <div class="stage" id="cmpStage">
-      <canvas id="cmpAfter"></canvas>
-      <canvas id="cmpBefore"></canvas>
-      <div class="cmp-handle" id="cmpHandle"></div>
-      <div class="tag" style="left:10px">BEFORE</div><div class="tag" style="right:10px">AFTER</div>
-    </div>
-    <input type="range" id="cmpRange" min="0" max="100" value="50" style="width:100%;margin-top:10px">
-    <h2 style="margin-top:18px">Share image</h2>
-    <img id="finalImg" alt="Before and after image">
-    <p class="note" id="saveNote">Press and hold the image to save it to your phone.</p>
-    <button class="btn pri" id="dlBtn">Save or share image</button>
-    <div class="row"><button class="btn sec" id="resAdjust">Adjust match</button><button class="btn sec" id="restart">New job</button></div>
-  </section>
-</main>
-<div class="toast" id="toast"></div>
+<!-- ================= ADJUST ================= -->
+<section id="adjust" class="view hidden">
+  <div class="vhead">
+    <button class="text-btn" id="adjCancel">Cancel</button>
+    <div class="title">Adjust match</div>
+    <button class="text-btn pri" id="adjDone">Done</button>
+  </div>
+  <div class="adjArea"><canvas id="adjCanvas"></canvas></div>
+  <div class="adjCtl">
+    <div class="ctl"><label>Match</label><input type="range" disabled style="opacity:0;pointer-events:none"><span class="v" id="adjScore">–</span></div>
+    <div class="ctl"><label>Zoom</label><input type="range" id="adjZoom" min="80" max="125" step="0.5" value="100"><span class="v" id="adjZoomV">100%</span></div>
+    <div class="ctl"><label>Rotate</label><input type="range" id="adjRot" min="-6" max="6" step="0.1" value="0"><span class="v" id="adjRotV">0°</span></div>
+    <div class="ctl"><label>Ghost</label><input type="range" id="adjGhost" min="0" max="80" value="40"><span class="v" id="adjGhostV">40%</span></div>
+    <div class="btn2"><button class="btn sec" id="adjAuto">Auto-match</button><button class="btn sec" id="adjReset">Reset</button></div>
+  </div>
+</section>
+
+<div id="toast"></div>
+<div id="busy" class="hidden"><div class="spinner"></div><span id="busyTxt">Matching…</span></div>
 
 <script>
 (function(){
 "use strict";
 const $=s=>document.querySelector(s);
+const IOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
 
-/* ---------------- Job + shot data ---------------- */
-const JOBS={
-  windows:{name:"Window Cleaning",shots:[
-    {t:"Full elevation",a:"From the yard or curb, straight on. Get the whole side of the house in the frame.",w:"Shows how big the job was. Your best main shot for ads.",tip:"Keep the sun behind you."},
-    {t:"Single pane at 45°",a:"Step to one side so you see the glass at an angle, 3–6 ft away.",w:"The angle shows streaks, spots and hard water. Straight on, you mostly see your own reflection.",tip:"Pick the dirtiest pane on the house."},
-    {t:"Sill & track detail",a:"Close up, looking down into the track and sill.",w:"Dirty tracks are the difference customers notice first.",tip:"Tap to focus before you shoot."},
-    {t:"Screen close-up",a:"Screen straight on, either held against the sky or laid flat.",w:"Dusty and clean screens look very different in photos.",tip:"Use the same background for both shots."}]},
-  gutters:{name:"Gutter Cleaning",shots:[
-    {t:"Inside the trough",a:"From the ladder, looking straight down into the gutter.",w:"Debris that turns into a clean channel makes the most dramatic before and after.",tip:"Only shoot from a secure ladder position."},
-    {t:"Gutter run from the ground",a:"Stand at the corner and shoot along the length of the gutter.",w:"Shows overflow, sagging and plants growing out.",tip:"Use the corner of the house as your landmark."},
-    {t:"Downspout outlet",a:"At ground level, on the bottom of the downspout.",w:"Shows the clog has been cleared all the way down.",tip:"Run a hose for the after shot if you can."},
-    {t:"Gutter face",a:"Straight on at the outside face, with the black streaks in view.",w:"Clean gutter faces read well from the street.",tip:"Only if you're cleaning the face too."}]},
-  pressure:{name:"Pressure Washing",shots:[
-    {t:"Driveway from the street",a:"Stand at the end of the driveway, phone at chest height. Get the whole slab in the frame.",w:"The main shot. Shows the full area you cleaned.",tip:"Stand on the curb line, the same spot both times."},
-    {t:"Low angle along the surface",a:"Hold the phone near knee height and shoot along the concrete.",w:"A low angle makes the color change stand out much more.",tip:"Shoot toward the house, not the street."},
-    {t:"Stain close-up",a:"Straight down over an oil, rust or mildew spot.",w:"Close-ups prove you handled the hard spots.",tip:"Put your foot at the edge of the frame for scale."},
-    {t:"Walkway / entry",a:"From the start of the walkway, looking toward the front door.",w:"How people see the house when they walk up.",tip:"Include the front step in the frame."}]},
-  exterior:{name:"Full Exterior",shots:[
-    {t:"Corner shot",a:"From the yard, aimed at a corner so you get two sides of the house.",w:"Shows the whole exterior package in one photo.",tip:"Stand far enough back to fit the roofline."},
-    {t:"Siding close-up",a:"Shoot along the siding at an angle, where the algae or mildew is.",w:"With light hitting the wall from the side, the streaks show up clearly.",tip:"North-facing walls are usually the worst."},
-    {t:"Soffit & eaves",a:"Looking up at the eaves from under the roofline.",w:"Cobwebs and mildew up there are easy to show off.",tip:"Hold the phone level, aimed straight up."},
-    {t:"Front entry",a:"Straight on at the front door, with the windows next to it.",w:"The spot customers care about most.",tip:"Close the door for both shots."}]},
-  storefront:{name:"Storefront / Commercial",shots:[
-    {t:"Storefront straight on",a:"From across the sidewalk. Get the whole storefront and sign in the frame.",w:"The property manager sees the whole result in one photo.",tip:"Shoot at the same time of day so the glare matches."},
-    {t:"Door glass close-up",a:"Door at handle height, slightly angled.",w:"Fingerprints and smudges show up best at an angle.",tip:"Prop the door closed for both shots."},
-    {t:"Window run at an angle",a:"Stand at one end and shoot down the row of windows at 30–45°.",w:"Shows every pane cleaned, with no streaks.",tip:"Shoot with the sun behind you."},
-    {t:"Entry walkway",a:"From the parking lot, facing the entry.",w:"Gum and stains on the sidewalk are a strong selling point for HOAs and businesses.",tip:"Only if you pressure washed it."}]}
-};
-
-/* ---------------- State ---------------- */
-// T maps BEFORE-frame coords -> AFTER/live-frame coords (analysis units): q = c + s*Rot(r)*(p-c) + d
-const S={job:null,shot:null,W:0,H:0,before:null,outline:null,roi:null,roiA:null,fPts:null,
-  after:null,aDil:null,T:{dx:0,dy:0,s:1,r:0},stream:null,camMode:null,loop:0,ema:null,wasGood:false};
-const AW=240; let AH=180;
+/* =========================================================
+   Image analysis (edges, matching)
+   ========================================================= */
+const AW=240; let AH=420;
 const ID=()=>({dx:0,dy:0,s:1,r:0});
-
-/* ---------------- UI helpers ---------------- */
-const steps=["stepJob","stepBefore","stepCam","stepBeforeReview","stepAfter","stepAlign","stepResult"];
-const prog={stepJob:1,stepBefore:2,stepCam:0,stepBeforeReview:2,stepAfter:3,stepAlign:3,stepResult:4};
-function show(id){
-  steps.forEach(s=>$("#"+s).classList.toggle("active",s===id));
-  let p=prog[id]||(S.camMode==="after"?3:2);
-  for(let i=1;i<=4;i++) $("#s"+i).classList.toggle("on",i<=p);
-  window.scrollTo(0,0);
-}
-function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200);}
-function mk(w,h){const c=document.createElement("canvas");c.width=w;c.height=h;return c;}
-function setAspect(el,a){el.style.setProperty("--a",a);}
+function mk(w,h){const c=document.createElement("canvas");c.width=Math.max(1,w|0);c.height=Math.max(1,h|0);return c;}
 function coverCrop(sw,sh,a){ if(sw/sh>a){const cw=sh*a;return{x:(sw-cw)/2,y:0,w:cw,h:sh};} const ch=sw/a;return{x:0,y:(sh-ch)/2,w:sw,h:ch}; }
-
-/* ---------------- Image analysis ---------------- */
 const _ctx={};
 function ctxFor(w,h){const k=w+"x"+h;if(!_ctx[k]){_ctx[k]=mk(w,h).getContext("2d",{willReadFrequently:true});}return _ctx[k];}
 function blur(g,w,h){
@@ -264,12 +275,13 @@ function blur(g,w,h){
   for(let y=0;y<h;y++){const u=Math.max(0,y-1)*w,m=y*w,d=Math.min(h-1,y+1)*w;for(let x=0;x<w;x++)o[m+x]=(t[u+x]+t[m+x]+t[d+x])/3;}
   return o;
 }
-// Gradient magnitude (Sobel) of a source drawn at w x h
-function sobel(src,crop,w,h,passes){
+// Gradient magnitude + raw gray of a source drawn at w x h
+function sobel(src,crop,w,h,passes,wantGray){
   const x=ctxFor(w,h);x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";
   if(crop)x.drawImage(src,crop.x,crop.y,crop.w,crop.h,0,0,w,h);else x.drawImage(src,0,0,w,h);
   const d=x.getImageData(0,0,w,h).data,n=w*h;let g=new Float32Array(n);
   for(let i=0;i<n;i++)g[i]=.299*d[i*4]+.587*d[i*4+1]+.114*d[i*4+2];
+  const raw=wantGray?g:null;
   for(let p=0;p<passes;p++)g=blur(g,w,h);
   const m=new Float32Array(n);
   for(let y=1;y<h-1;y++)for(let xx=1;xx<w-1;xx++){
@@ -278,9 +290,9 @@ function sobel(src,crop,w,h,passes){
     const gy=-g[i-w-1]-2*g[i-w]-g[i-w+1]+g[i+w-1]+2*g[i+w]+g[i+w+1];
     m[i]=Math.sqrt(gx*gx+gy*gy);
   }
+  if(wantGray){m.gray=raw;}
   return m;
 }
-// Keep the strongest `keep` fraction of edges inside roi (pixel rect), zero elsewhere
 function thresh(m,w,h,keep,roi){
   roi=roi||{x:0,y:0,w:w,h:h};
   const x0=Math.max(1,Math.floor(roi.x)),y0=Math.max(1,Math.floor(roi.y)),x1=Math.min(w-1,Math.ceil(roi.x+roi.w)),y1=Math.min(h-1,Math.ceil(roi.y+roi.h));
@@ -293,11 +305,10 @@ function thresh(m,w,h,keep,roi){
   for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)out[y*w+x]=m[y*w+x]>=thr?1:0;
   return out;
 }
-// Drop small specks: keep only connected edge pieces whose span is at least minExt pixels
 function clean(b,w,h,minExt){
-  const lab=new Int32Array(w*h),stack=new Int32Array(w*h),out=new Uint8Array(w*h);let id=0;
+  const lab=new Int32Array(w*h),stack=new Int32Array(w*h),out=new Uint8Array(w*h);let id=0;const mem=[];
   for(let i=0;i<b.length;i++){
-    if(!b[i]||lab[i])continue;id++;let sp=0,mem=[];stack[sp++]=i;lab[i]=id;
+    if(!b[i]||lab[i])continue;id++;let sp=0;mem.length=0;stack[sp++]=i;lab[i]=id;
     let minx=w,maxx=0,miny=h,maxy=0;
     while(sp){const j=stack[--sp];mem.push(j);const x=j%w,y=(j/w)|0;
       if(x<minx)minx=x;if(x>maxx)maxx=x;if(y<miny)miny=y;if(y>maxy)maxy=y;
@@ -316,8 +327,6 @@ function pts(b,w,h,maxN){let c=0;for(let i=0;i<b.length;i++)c+=b[i];const step=M
   const arr=[];let k=0;for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(b[y*w+x]){if(k++%step===0)arr.push(x,y);}return Int16Array.from(arr);}
 function covIn(b,r){let c=0,n=0;const x0=Math.max(0,r.x|0),y0=Math.max(0,r.y|0),x1=Math.min(AW,Math.ceil(r.x+r.w)),y1=Math.min(AH,Math.ceil(r.y+r.h));
   for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){c+=b[y*AW+x];n++;}return n?c/(2*n):0;}
-
-// Fraction of before-object points that land on edges in the other frame under T
 function hitFrac(P,M,T){
   const n=P.length/2;if(!n)return 0;const cx=AW/2,cy=AH/2,c=Math.cos(T.r),s=Math.sin(T.r);let h=0;
   for(let i=0;i<n;i++){const x=P[2*i]-cx,y=P[2*i+1]-cy;
@@ -325,7 +334,6 @@ function hitFrac(P,M,T){
     if(X>=0&&X<AW&&Y>=0&&Y<AH)h+=M[Y*AW+X];}
   return h/(2*n);
 }
-// 0..100, corrected for how busy the other frame is (random-chance hits)
 function matchScore(M,T){
   const cv=covIn(M,S.roiA);const r=hitFrac(S.fPts,M,T);
   const rn=(r-cv)/Math.max(0.05,1-cv);
@@ -345,21 +353,403 @@ function search(M,R,step,scales,rots,around){
       }}}
   return best;
 }
-function frameEdges(src,crop){const m=sobel(src,crop,AW,AH,1);const e=thresh(m,AW,AH,0.09,null),d=dilate(e,AW,AH);for(let i=0;i<d.length;i++)d[i]+=e[i];return d;}
+function edges2(m){const e=thresh(m,AW,AH,0.09,null),d=dilate(e,AW,AH);for(let i=0;i<d.length;i++)d[i]+=e[i];return d;}
+function frameEdges(src,crop){return edges2(sobel(src,crop,AW,AH,1));}
 
-/* ---------------- Before + object selection ---------------- */
-function setBefore(src,sw,sh){
-  const k=Math.min(1,1600/Math.max(sw,sh));
-  S.W=Math.round(sw*k);S.H=Math.round(sh*k);
-  const c=mk(S.W,S.H);const x=c.getContext("2d");x.imageSmoothingQuality="high";x.drawImage(src,0,0,S.W,S.H);
-  S.before=c;AH=Math.max(40,Math.round(AW*S.H/S.W));
-  S.beforeUrl=c.toDataURL("image/jpeg",0.8);
-  S.roi=null;S.mA=sobel(c,null,AW,AH,1);
+/* =========================================================
+   Motion sensors: roll (level) and pitch (camera up/down)
+   ========================================================= */
+const SENS={ok:false,roll:0,pitch:0};
+function angDiff(a,b){let d=a-b;while(d>180)d-=360;while(d<-180)d+=360;return d;}
+function onMotion(e){
+  const a=e.accelerationIncludingGravity;if(!a||a.x==null||a.y==null||a.z==null)return;
+  let ax=a.x,ay=a.y,az=a.z;if(IOS){ax=-ax;ay=-ay;az=-az;}
+  if(Math.hypot(ax,ay,az)<3)return;
+  const roll=Math.atan2(-ax,ay)*180/Math.PI;            // + = phone turned clockwise
+  const pitch=Math.atan2(-az,Math.hypot(ax,ay))*180/Math.PI; // + = camera pointing up
+  if(!SENS.ok){SENS.roll=roll;SENS.pitch=pitch;SENS.ok=true;return;}
+  SENS.roll+=angDiff(roll,SENS.roll)*0.18;SENS.pitch+=(pitch-SENS.pitch)*0.18;
+}
+window.addEventListener("devicemotion",onMotion);
+let motionAsked=false;
+function askMotion(){
+  if(motionAsked)return;motionAsked=true;
+  try{if(window.DeviceMotionEvent&&typeof DeviceMotionEvent.requestPermission==="function")DeviceMotionEvent.requestPermission().catch(()=>{});}catch(_){}
+}
+
+/* =========================================================
+   Storage (IndexedDB, falls back to memory)
+   ========================================================= */
+const DB={db:null,mem:{befores:new Map(),pairs:new Map()},
+  open(){return new Promise(res=>{try{const r=indexedDB.open("sb-lineup",1);
+    r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains("befores"))d.createObjectStore("befores",{keyPath:"id"});if(!d.objectStoreNames.contains("pairs"))d.createObjectStore("pairs",{keyPath:"id"});};
+    r.onsuccess=()=>{DB.db=r.result;res();};r.onerror=()=>res();}catch(_){res();}});},
+  tx(store,mode,fn){return new Promise((res,rej)=>{if(!DB.db){res(fn(null));return;}try{const t=DB.db.transaction(store,mode);const st=t.objectStore(store);const out=fn(st);t.oncomplete=()=>res(out&&out.result!==undefined?out.result:out);t.onerror=()=>rej(t.error);}catch(e){rej(e);}});},
+  async put(store,obj){if(!DB.db){DB.mem[store].set(obj.id,obj);return;}await DB.tx(store,"readwrite",st=>st.put(obj));},
+  async del(store,id){if(!DB.db){DB.mem[store].delete(id);return;}await DB.tx(store,"readwrite",st=>st.delete(id));},
+  async all(store){if(!DB.db)return[...DB.mem[store].values()];return new Promise((res)=>{const t=DB.db.transaction(store,"readonly");const r=t.objectStore(store).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>res([]);});},
+  async get(store,id){if(!DB.db)return DB.mem[store].get(id);return new Promise((res)=>{const t=DB.db.transaction(store,"readonly");const r=t.objectStore(store).get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);});}
+};
+function canvasBlob(c,q){return new Promise(r=>c.toBlob(b=>r(b),"image/jpeg",q||0.9));}
+function blobImg(b){return new Promise((res,rej)=>{const u=URL.createObjectURL(b);const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=u;});}
+function thumbOf(c,w){const k=w/c.width;const t=mk(w,c.height*k);t.getContext("2d").drawImage(c,0,0,t.width,t.height);return t.toDataURL("image/jpeg",0.7);}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const fmtTime=t=>new Date(t).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});
+
+/* =========================================================
+   State
+   ========================================================= */
+const S={mode:"before",stream:null,loop:0,
+  lock:null,           // before mode: locked region (normalized to stage)
+  lastClean:null,      // before mode: latest cleaned edge map, for tap-to-lock
+  subj:null,           // before mode: detected subject box
+  cur:null,            // after mode: the before record being matched
+  W:0,H:0,before:null,outline:null,roi:null,roiA:null,fPts:null,mA:null,mD:null,oW:0,oH:0,
+  after:null,aDil:null,T:ID(),pair:null,ghost:0.3,
+  view:{msg:"",pend:"",pendN:0,ema:null,good:false},
+  sheet:null};
+let befores=[],pairs=[];
+
+const stage=$("#stage"),video=$("#video");
+const stageAspect=()=>stage.clientWidth/Math.max(1,stage.clientHeight);
+function toast(m,ms){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),ms||1800);}
+function busy(on,txt){$("#busy").classList.toggle("hidden",!on);if(txt)$("#busyTxt").textContent=txt;}
+let touched=false;["pointerdown","touchstart"].forEach(ev=>window.addEventListener(ev,()=>{touched=true;},{once:true,passive:true}));
+function buzz(ms){if(!touched)return;try{navigator.vibrate&&navigator.vibrate(ms);}catch(_){}}
+
+/* =========================================================
+   Camera
+   ========================================================= */
+function camEnvProblem(){
+  const ua=navigator.userAgent||"";
+  const ourApp=/SBLineupApp/.test(ua)||!!window.SBAndroid;
+  const inApp=!ourApp&&/Claude|FBAN|FBAV|Instagram|Snapchat|Line\/|; wv\)|GSA\//i.test(ua);
+  if(!window.isSecureContext)return "Open this page from its https link.";
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||inApp)return "This browser won't share the camera. Open squeegeebros.github.io/lineup in Chrome or Safari, or install the app.";
+  return "";
+}
+function camErr(e){
+  const n=e&&e.name||"";
+  if(n==="NotAllowedError"||n==="SecurityError")return "Camera permission is off. Allow the camera for SB Lineup in your phone's settings, then reopen the app.";
+  if(n==="NotReadableError"||n==="AbortError")return "Another app is using the camera. Close it and try again.";
+  if(n==="NotFoundError"||n==="OverconstrainedError")return "No camera found on this device.";
+  return "The camera couldn't start.";
+}
+function camMsg(state,h,p){
+  const m=$("#camMsg");
+  if(state==="hide"){m.classList.add("hidden");return;}
+  m.classList.remove("hidden");$("#camSpin").classList.toggle("hidden",state!=="loading");
+  $("#camH").textContent=h;$("#camP").textContent=p||"";$("#camFileBtn").classList.toggle("hidden",state!=="error");
+}
+function waitVideo(ms){return new Promise(res=>{const t0=Date.now();(function poll(){if(video.videoWidth>0)return res(true);if(Date.now()-t0>ms)return res(false);setTimeout(poll,100);})();});}
+async function startCam(){
+  if(S.stream)return true;
+  const env=camEnvProblem();if(env){camMsg("error","Camera unavailable",env);return false;}
+  camMsg("loading","Starting camera…");
+  const tries=[{video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false},{video:{facingMode:"environment"},audio:false},{video:true,audio:false}];
+  let st=null,err=null;
+  for(const c of tries){try{st=await navigator.mediaDevices.getUserMedia(c);break;}catch(e){err=e;if(e.name==="NotAllowedError"||e.name==="SecurityError")break;}}
+  if(!st){camMsg("error","Camera didn't open",camErr(err));return false;}
+  S.stream=st;video.muted=true;video.setAttribute("playsinline","");video.srcObject=st;video.play().catch(()=>{});
+  if(!(await waitVideo(4000))){
+    camMsg("loading","Tap to start the camera");
+    await new Promise(r=>{stage.addEventListener("click",()=>{video.play().catch(()=>{});r();},{once:true});});
+    if(!(await waitVideo(4000))){stopCam();camMsg("error","No picture from the camera","Close other apps using the camera and reopen SB Lineup.");return false;}
+  }
+  camMsg("hide");startLoop();return true;
+}
+function stopCam(){clearTimeout(S.loop);S.loop=0;if(S.stream){S.stream.getTracks().forEach(t=>t.stop());S.stream=null;}video.srcObject=null;}
+document.addEventListener("visibilitychange",()=>{if(document.hidden)stopCam();else if(!anyViewOpen())startCam();});
+function anyViewOpen(){return !$("#result").classList.contains("hidden")||!$("#adjust").classList.contains("hidden");}
+
+/* =========================================================
+   Live analysis loop
+   ========================================================= */
+function startLoop(){
+  clearTimeout(S.loop);
+  const tick=()=>{
+    if(!S.stream)return;
+    try{ if(video.videoWidth){ if(S.mode==="before")analyzeBefore();else analyzeAfter(); } }catch(e){console.error(e);}
+    renderLevel();
+    S.loop=setTimeout(tick,170);
+  };
+  tick();
+}
+function liveCrop(){return coverCrop(video.videoWidth,video.videoHeight,stageAspect());}
+function setAHForStage(){AH=Math.max(60,Math.round(AW/stageAspect()));}
+
+// Find the main structure: bounding box of the strongest long edges (robust percentiles)
+function subjectBox(c){
+  const colC=new Uint32Array(AW),rowC=new Uint32Array(AH);let n=0;
+  for(let y=0;y<AH;y++)for(let x=0;x<AW;x++)if(c[y*AW+x]){colC[x]++;rowC[y]++;n++;}
+  if(n<40)return null;
+  const pct=(arr,p)=>{let acc=0,t=p*n;for(let i=0;i<arr.length;i++){acc+=arr[i];if(acc>=t)return i;}return arr.length-1;};
+  const x0=pct(colC,0.04),x1=pct(colC,0.96),y0=pct(rowC,0.04),y1=pct(rowC,0.96);
+  return{x:x0/AW,y:y0/AH,w:Math.max(0.02,(x1-x0)/AW),h:Math.max(0.02,(y1-y0)/AH),n};
+}
+function analyzeBefore(){
+  setAHForStage();
+  const m=sobel(video,liveCrop(),AW,AH,1,true),g=m.gray;
+  const c=clean(thresh(m,AW,AH,0.08,null),AW,AH,Math.round(AW*0.12));
+  S.lastClean=c;
+  const auto=subjectBox(c);
+  const box=S.lock||auto;
+  // smooth the displayed box
+  if(box){const p=S.subj;S.subj=p&&!S.lock?{x:p.x*.6+box.x*.4,y:p.y*.6+box.y*.4,w:p.w*.6+box.w*.4,h:p.h*.6+box.h*.4}:{...box};}else S.subj=null;
+  // light
+  let sum=0,br=0;const n=g.length;for(let i=0;i<n;i++){sum+=g[i];if(g[i]>247)br++;}
+  const mean=sum/n,bright=br/n;
+  let glare=0;
+  if(S.subj){const b=S.subj,x0=(b.x*AW)|0,y0=(b.y*AH)|0,x1=Math.min(AW,((b.x+b.w)*AW)|0),y1=Math.min(AH,((b.y+b.h)*AH)|0);let k=0,t=0;
+    for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){t++;if(g[y*AW+x]>247)k++;}glare=t?k/t:0;}
+  const e=S.view.ema,a=0.35;
+  S.view.ema=e?{mean:e.mean*(1-a)+mean*a,bright:e.bright*(1-a)+bright*a,glare:e.glare*(1-a)+glare*a}:{mean,bright,glare};
+  const A=assessBefore();
+  showAssessment(A);
+  renderBrackets();
+  if(S.sheet==="guide")renderGuide(A);
+}
+// Turn measurements into checks + one top suggestion
+function assessBefore(){
+  const L=S.view.ema||{mean:128,bright:0,glare:0};
+  const issues=[];const chk={level:"none",frame:"good",light:"good"};const detail={};
+  const roll=SENS.roll,pitch=SENS.pitch;
+  if(SENS.ok){
+    chk.level="good";
+    if(Math.abs(roll)>40){issues.push({p:0,msg:"Hold the phone upright",k:"level"});chk.level="bad";}
+    else if(Math.abs(roll)>1.5){const n=Math.round(Math.abs(roll));issues.push({p:1,msg:`Rotate ${roll>0?"left":"right"} ${n}° to level`,k:"level"});chk.level="warn";}
+    if(pitch>12){issues.push({p:3,msg:`Pointing up ${Math.round(pitch)}°, step back`,k:"level"});if(chk.level==="good")chk.level="warn";}
+    detail.level=Math.abs(roll)<=1.5?"Level.":`Tilted ${Math.round(Math.abs(roll))}° ${roll>0?"clockwise, rotate left":"counter-clockwise, rotate right"}.`;
+    detail.tilt=pitch>12?`Camera points up ${Math.round(pitch)}°, so straight lines will lean. Step back and hold the phone straighter.`:
+                pitch<-20?`Camera points down ${Math.round(-pitch)}°. Good for driveways, walkways and sills.`:"Straight on. Lines will stay straight.";
+  }
+  const b=S.subj;
+  if(b){
+    const L0=b.x<0.025,R0=b.x+b.w>0.975,T0=b.y<0.025,B0=b.y+b.h>0.975;
+    let fmsg="",fd="Subject is centered and fully in the frame.";
+    const cutL=L0&&b.x+b.w<0.88,cutR=R0&&b.x>0.12,cutT=T0&&b.y+b.h<0.88,cutB=B0&&b.y>0.12;
+    if(cutL||cutR){fmsg=`Step back, cut off on the ${cutL?"left":"right"}`;fd=`The ${S.lock?"locked object":"main subject"} runs off the ${cutL?"left":"right"} edge.`;}
+    else if(S.lock&&(cutT||cutB)){fmsg=`Step back, cut off at the ${cutT?"top":"bottom"}`;fd=`The locked object runs off the ${cutT?"top":"bottom"} edge.`;}
+    else if(!S.lock&&b.w*b.h<0.07){fmsg="Step closer";fd="The subject is small in the frame. Get closer so the result is easy to see.";}
+    else if(!S.lock&&!(L0&&R0)){const cx=b.x+b.w/2,cy=b.y+b.h/2;
+      if(Math.abs(cx-0.5)>0.14){fmsg=`Aim a little ${cx<0.5?"left":"right"}`;fd="Center the subject so the after shot is easy to match.";}
+      else if(Math.abs(cy-0.5)>0.17){fmsg=`Aim a little ${cy<0.5?"up":"down"}`;fd="Center the subject so the after shot is easy to match.";}}
+    if(fmsg){issues.push({p:2,msg:fmsg,k:"frame"});chk.frame="warn";}
+    detail.frame=fmsg?fd:(S.lock?"The locked object is fully in the frame.":fd);
+  }else{chk.frame="none";detail.frame="Point the camera at the job.";}
+  let ld="Lighting looks good.";
+  if(L.mean<45){issues.push({p:4,msg:"Too dark, find more light",k:"light"});chk.light="warn";ld="The picture is very dark. Turn so the light is behind you, or come back in better light.";}
+  else if(L.bright>0.4){issues.push({p:4,msg:"Very bright, sun in the shot?",k:"light"});chk.light="warn";ld="A large part of the picture is blown out. Turn so the sun is behind you.";}
+  detail.light=ld;
+  issues.sort((a,b)=>a.p-b.p);
+  return{issues,chk,detail,good:issues.length===0&&!!b};
+}
+function analyzeAfter(){
+  if(!S.fPts)return;
+  const M=frameEdges(video,liveCrop());
+  const sc=matchScore(M,ID());
+  let b=search(M,24,3,[0.92,0.96,1,1.04,1.08],[0]);
+  b=search(M,2,1,[b.s-0.02,b.s,b.s+0.02],[0],{dx:b.dx,dy:b.dy});
+  const e=S.view.ema&&S.view.ema.sc!==undefined?S.view.ema:null,a=0.45;
+  S.view.ema=e?{sc:e.sc*(1-a)+sc*a,dx:e.dx*(1-a)+b.dx*a,dy:e.dy*(1-a)+b.dy*a,s:e.s*(1-a)+b.s*a}:{sc,dx:b.dx,dy:b.dy,s:b.s};
+  const A=assessAfter();
+  showAssessment(A);
+  if(S.sheet==="guide")renderGuide(A);
+}
+function assessAfter(){
+  const e=S.view.ema||{sc:0,dx:0,dy:0,s:1},cur=S.cur||{};
+  const pct=Math.round(e.sc),good=pct>=80;
+  const issues=[];const chk={level:"none",frame:"warn",light:"warn"};const detail={};
+  const hasG=SENS.ok&&typeof cur.roll==="number";
+  const dR=hasG?angDiff(SENS.roll,cur.roll):0,dP=hasG?SENS.pitch-cur.pitch:0;
+  if(hasG){
+    chk.level=(Math.abs(dR)<=1.5&&Math.abs(dP)<=3)?"good":"warn";
+    if(Math.abs(dR)>1.5)issues.push({p:1,msg:`Rotate ${dR>0?"left":"right"} ${Math.round(Math.abs(dR))}° to match`});
+    if(Math.abs(dP)>3)issues.push({p:2,msg:`Tilt ${dP>0?"down":"up"} ${Math.round(Math.abs(dP))}° to match`});
+    detail.level=chk.level==="good"?"Phone angle matches the before photo.":`Off by ${Math.abs(dR).toFixed(1)}° rotation and ${Math.abs(dP).toFixed(1)}° tilt.`;
+  }else detail.level="Angle sensor not available on this device.";
+  const t=Math.max(2,AW*0.015);const pos=[];
+  if(e.dx>t)pos.push("Aim right");else if(e.dx<-t)pos.push("Aim left");
+  if(e.dy>t)pos.push("Aim down");else if(e.dy<-t)pos.push("Aim up");
+  chk.frame=pos.length?"warn":"good";
+  const dist=e.s>1.03?"Step back":e.s<0.97?"Step closer":"";
+  chk.light=dist?"warn":"good";
+  if(pos.length)issues.push({p:3,msg:pos.join(", ")});
+  if(dist)issues.push({p:4,msg:dist});
+  detail.frame=pos.length?pos.join(" and ")+" until the outline sits on the object.":"Position matches.";
+  detail.light=dist?(dist==="Step back"?"You're closer than in the before photo.":"You're farther away than in the before photo."):"Distance matches.";
+  issues.sort((a,b)=>a.p-b.p);
+  if(good){chk.frame="good";chk.light="good";}
+  return{issues:good?[]:issues,chk,detail,good,pct};
+}
+const ICONS={
+  warn:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFB800" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4M17 12h4"/><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2"/></svg>',
+  good:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2FD27A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  wait:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/></svg>'
+};
+function showAssessment(A){
+  const v=S.view;
+  let msg,good=A.good;
+  if(S.mode==="after")msg=good?"Lined up, take it":(A.issues[0]?A.issues[0].msg:"Almost there, hold steady");
+  else msg=good?"Good angle, take it":(A.issues[0]?A.issues[0].msg:"Point at the job");
+  // hysteresis: only switch text after it's stable for 2 ticks
+  if(msg!==v.msg){if(msg===v.pend)v.pendN++;else{v.pend=msg;v.pendN=1;}if(v.pendN>=2||!v.msg){v.msg=msg;$("#pMsg").textContent=msg;}}
+  const state=good?"good":(A.issues.length?"warn":"wait");
+  $("#pIco").innerHTML=ICONS[state];
+  $("#pIco").style.background=state==="good"?"rgba(47,210,122,.16)":state==="warn"?"rgba(255,184,0,.16)":"rgba(255,255,255,.08)";
+  ["level","frame","light"].forEach((k,i)=>{$("#c"+(i+1)+"d").className="dot "+(A.chk[k]==="none"?"":A.chk[k]);});
+  if(S.mode==="after"){const b=$("#pBar i");b.style.width=A.pct+"%";b.style.background=A.pct>=80?"var(--green)":A.pct>=50?"var(--amber)":"var(--red)";}
+  $("#shutter").classList.toggle("go",good);
+  if(good&&!v.good)buzz(35);
+  v.good=good;S.lastA=A;
+}
+function renderLevel(){
+  const lv=$("#level");
+  if(!SENS.ok||!S.stream){lv.classList.add("hidden");return;}
+  let d=SENS.roll;
+  if(S.mode==="after"&&S.cur&&typeof S.cur.roll==="number")d=angDiff(SENS.roll,S.cur.roll);
+  if(Math.abs(d)>40){lv.classList.add("hidden");return;}
+  lv.classList.remove("hidden");
+  const ok=Math.abs(d)<=1.5;
+  lv.style.setProperty("--lc",ok?"var(--green)":"var(--amber)");
+  $("#lvLine").style.transform=`rotate(${-d}deg)`;
+  $("#lvDeg").textContent=ok?(S.mode==="after"?"Angle OK":"Level"):Math.round(Math.abs(d))+"°";
+}
+function renderBrackets(){
+  const el=$("#brk"),b=S.subj;
+  if(S.mode!=="before"||!b){el.classList.add("hidden");return;}
+  el.classList.remove("hidden");el.classList.toggle("locked",!!S.lock);
+  const W=stage.clientWidth,H=stage.clientHeight,pad=6;
+  el.style.left=(b.x*W-pad)+"px";el.style.top=(b.y*H-pad)+"px";el.style.width=(b.w*W+pad*2)+"px";el.style.height=(b.h*H+pad*2)+"px";
+}
+
+/* =========================================================
+   Guide sheet (tap the Suggested angle bar)
+   ========================================================= */
+function bubbleSVG(){
+  // target: level (before) or the before photo's angle (after)
+  let tr=0,tp=0,useP=true;
+  if(S.mode==="after"&&S.cur&&typeof S.cur.roll==="number"){tr=S.cur.roll;tp=S.cur.pitch;}
+  else if(SENS.pitch<-20)useP=false; // pointing down at the ground on purpose
+  const dR=SENS.ok?angDiff(SENS.roll,tr):0,dP=SENS.ok&&useP?SENS.pitch-tp:0;
+  const k=6,lim=72;const bx=Math.max(-lim,Math.min(lim,-dR*k)),by=Math.max(-lim,Math.min(lim,dP*k));
+  const ok=Math.abs(dR)<=1.5&&Math.abs(dP)<=(S.mode==="after"?3:4);
+  const col=!SENS.ok?"rgba(255,255,255,.3)":ok?"#2FD27A":"#FFB800";
+  return `<svg class="bubble" width="200" height="200" viewBox="-100 -100 200 200">
+    <circle r="92" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.18)" stroke-width="2"/>
+    <circle r="46" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+    <line x1="-92" y1="0" x2="92" y2="0" stroke="rgba(255,255,255,.12)"/><line x1="0" y1="-92" x2="0" y2="92" stroke="rgba(255,255,255,.12)"/>
+    <circle r="15" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-dasharray="4 4"/>
+    <circle cx="${bx.toFixed(1)}" cy="${by.toFixed(1)}" r="13" fill="${col}" opacity=".95"/>
+  </svg>`;
+}
+function renderGuide(A){
+  A=A||S.lastA;if(!A)return;
+  const after=S.mode==="after";
+  const rows=after?[
+    ["level","Phone angle",A.detail.level,SENS.ok&&S.cur&&typeof S.cur.roll==="number"?`${Math.abs(angDiff(SENS.roll,S.cur.roll)).toFixed(1)}°`:""],
+    ["frame","Position",A.detail.frame,""],
+    ["light","Distance",A.detail.light,""]
+  ]:[
+    ["level","Level & tilt",(A.detail.level||"Angle sensor not available on this device.")+(A.detail.tilt?" "+A.detail.tilt:""),SENS.ok?`${Math.abs(SENS.roll).toFixed(1)}°`:""],
+    ["frame","Framing",A.detail.frame,""],
+    ["light","Light",A.detail.light,""]
+  ];
+  const top=A.good?(after?"Lined up, take the after photo":"Good angle, take the photo"):(A.issues[0]?A.issues[0].msg:"Point the camera at the job");
+  $("#sheetBody").innerHTML=`
+    <div class="sh-title">${after?"Match the before":"Suggested angle"}</div>
+    <div class="sh-sub">${top}${after?` · match ${A.pct}%`:""}</div>
+    ${bubbleSVG()}
+    <div class="sh-sub" style="text-align:center;margin-bottom:6px">${after?"Move the dot into the circle to match the before photo's angle":"Move the dot into the circle to hold the phone level"}</div>
+    <div class="checks">${rows.map(r=>`<div class="check"><span class="dot ${A.chk[r[0]]==="none"?"":A.chk[r[0]]}"></span><div><div class="ct">${r[1]}</div><div class="cd">${r[2]}</div></div><div class="cv">${r[3]}</div></div>`).join("")}</div>
+    <div class="tipline">${after?"Tip: stand where you stood for the before. The outline shows the object you locked onto.":"Tip: tap the sill or any solid edge on screen to lock onto it. The after shot will match that exact spot."}</div>`;
+}
+
+/* =========================================================
+   Sheets
+   ========================================================= */
+function openSheet(kind){S.sheet=kind;$("#sheetWrap").classList.remove("hidden");
+  if(kind==="guide")renderGuide();else if(kind==="pick")renderPick();else if(kind==="pairs")renderPairs();}
+function closeSheet(){S.sheet=null;$("#sheetWrap").classList.add("hidden");}
+$("#sheetBack").onclick=closeSheet;
+function renderPick(){
+  const list=[...befores].sort((a,b)=>b.t-a.t);
+  $("#sheetBody").innerHTML=`<div class="sh-title">Pick the before</div><div class="sh-sub">Choose the spot you're taking the after for.</div>`+
+    (list.length?`<div class="grid">${list.map(b=>`<div class="cell" data-id="${b.id}"><img src="${b.thumb}" alt=""><span class="time">${fmtTime(b.t)}</span><button class="del" data-del="${b.id}" aria-label="Delete"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join("")}</div>`
+    :`<div class="empty">No before photos waiting.<br>Take one in Before mode first.</div>`);
+  $("#sheetBody").querySelectorAll(".cell").forEach(c=>c.onclick=async e=>{
+    const del=e.target.closest("[data-del]");
+    if(del){e.stopPropagation();if(del.dataset.confirm){await DB.del("befores",del.dataset.del);await refreshLists();renderPick();}else{del.dataset.confirm="1";del.style.background="#FF5A4E";toast("Tap again to delete");}return;}
+    closeSheet();const rec=befores.find(b=>b.id===c.dataset.id);if(rec)enterAfter(rec);
+  });
+}
+function renderPairs(){
+  const list=[...pairs].sort((a,b)=>b.t-a.t);
+  $("#sheetBody").innerHTML=`<div class="sh-title">Finished</div><div class="sh-sub">Your before &amp; after photos.</div>`+
+    (list.length?`<div class="grid two">${list.map(p=>`<div class="cell wide" data-id="${p.id}"><img src="${p.thumb}" alt=""><span class="time">${fmtTime(p.t)}</span></div>`).join("")}</div>`
+    :`<div class="empty">Nothing finished yet.</div>`);
+  $("#sheetBody").querySelectorAll(".cell").forEach(c=>c.onclick=async()=>{closeSheet();const p=pairs.find(x=>x.id===c.dataset.id);if(p)openPair(p);});
+}
+
+/* =========================================================
+   Modes
+   ========================================================= */
+function setModeUI(){
+  const after=S.mode==="after";
+  $("#mBefore").classList.toggle("on",!after);$("#mAfter").classList.toggle("on",after);
+  $("#pLbl").textContent=after?"Line up":"Suggested angle";
+  $("#pBar").classList.toggle("hidden",!after);
+  $("#c1").textContent=after?"Angle":"Level";$("#c2").textContent=after?"Position":"Framing";$("#c3").textContent=after?"Distance":"Light";
+  ["#ghost","#outline","#ghostBtn"].forEach(s=>$(s).classList.toggle("hidden",!after));
+  $("#hint").classList.toggle("hidden",after||!!S.lock);
+  $("#lockChip").classList.toggle("hidden",after||!S.lock);
+  $("#brk").classList.toggle("hidden",after);
+  S.view={msg:"",pend:"",pendN:0,ema:null,good:false};$("#pMsg").textContent=after?"Finding the outline…":"Checking the angle…";
+  renderStack();
+}
+function renderStack(){
+  const after=S.mode==="after";
+  const st=$("#stack");
+  if(after&&S.cur){
+    st.classList.remove("empty");$("#st1").style.display="none";$("#st2").style.backgroundImage=`url(${S.cur.thumb})`;
+    $("#stBadge").classList.add("hidden");$("#stCap").textContent="Matching";
+  }else{
+    const list=[...befores].sort((a,b)=>b.t-a.t);
+    $("#st1").style.display="";
+    st.classList.toggle("empty",!list.length);
+    $("#st2").style.backgroundImage=list[0]?`url(${list[0].thumb})`:"none";
+    $("#st1").style.backgroundImage=list[1]?`url(${list[1].thumb})`:(list[0]?`url(${list[0].thumb})`:"none");
+    $("#stBadge").textContent=list.length;$("#stBadge").classList.toggle("hidden",!list.length);
+    $("#stCap").textContent="Need after";
+  }
+  $("#prBadge").textContent=pairs.length;$("#prBadge").classList.toggle("hidden",!pairs.length);
+}
+async function refreshLists(){befores=await DB.all("befores");pairs=await DB.all("pairs");renderStack();}
+
+function enterBefore(){S.mode="before";S.cur=null;S.lock=null;S.subj=null;setModeUI();}
+async function enterAfter(rec){
+  busy(true,"Loading…");
+  try{
+    const img=await blobImg(rec.blob);
+    loadBefore(img,img.naturalWidth,img.naturalHeight,rec.roi);
+    S.cur=rec;S.mode="after";
+    const gc=$("#ghost");const gk=Math.min(1,720/S.W);gc.width=Math.round(S.W*gk);gc.height=Math.round(S.H*gk);gc.getContext("2d").drawImage(S.before,0,0,gc.width,gc.height);
+    gc.style.opacity=S.ghost;
+    const oc=$("#outline");oc.width=S.outline.width;oc.height=S.outline.height;oc.getContext("2d").drawImage(S.outline,0,0);
+    setModeUI();
+  }finally{busy(false);}
+}
+// Prepare a before image for matching: crop to the screen's shape, compute edges + outline
+function loadBefore(src,sw,sh,roi){
+  const a=stageAspect(),cr=coverCrop(sw,sh,a);
+  const k=Math.min(1,1600/Math.max(cr.w,cr.h));
+  S.W=Math.round(cr.w*k);S.H=Math.round(cr.h*k);
+  const c=mk(S.W,S.H);const x=c.getContext("2d");x.imageSmoothingQuality="high";x.drawImage(src,cr.x,cr.y,cr.w,cr.h,0,0,S.W,S.H);
+  S.before=c;AH=Math.max(60,Math.round(AW*S.H/S.W));
+  S.roi=roi||null;S.mA=sobel(c,null,AW,AH,1);
   const ow=Math.min(480,S.W),oh=Math.round(ow*S.H/S.W);S.oW=ow;S.oH=oh;S.mD=sobel(c,null,ow,oh,1);
   computeFocus();
-  showBeforeReview();
 }
-// Build the matching points + display outline for the chosen object (or the whole picture)
 function computeFocus(){
   const r=S.roi;
   const roiA=r?{x:r.x*AW,y:r.y*AH,w:r.w*AW,h:r.h*AH}:{x:0,y:0,w:AW,h:AH};
@@ -367,210 +757,74 @@ function computeFocus(){
   bA=clean(bA,AW,AH,Math.max(4,Math.round(0.12*Math.min(roiA.w,roiA.h))));
   S.fPts=pts(bA,AW,AH,700);
   const mg=0.08;S.roiA={x:roiA.x-roiA.w*mg,y:roiA.y-roiA.h*mg,w:roiA.w*(1+2*mg),h:roiA.h*(1+2*mg)};
-  // display outline
   const w=S.oW,h=S.oH,oc=mk(w,h),ox=oc.getContext("2d"),id=ox.createImageData(w,h);
   const bg=clean(thresh(S.mD,w,h,0.07,null),w,h,Math.round(w*0.04));
   let fg=null;
   if(r){const rd={x:r.x*w,y:r.y*h,w:r.w*w,h:r.h*h};
     fg=dilate(clean(thresh(S.mD,w,h,0.16,rd),w,h,Math.max(6,Math.round(0.12*Math.min(rd.w,rd.h)))),w,h);}
   for(let i=0;i<w*h;i++){
-    if(fg&&fg[i]){id.data[i*4]=0;id.data[i*4+1]=229;id.data[i*4+2]=255;id.data[i*4+3]=255;}
-    else if(bg[i]){id.data[i*4]=255;id.data[i*4+1]=255;id.data[i*4+2]=255;id.data[i*4+3]=fg?70:230;
-      if(!fg){id.data[i*4]=0;id.data[i*4+1]=229;}}
+    if(fg&&fg[i]){id.data[i*4]=0;id.data[i*4+1]=214;id.data[i*4+2]=255;id.data[i*4+3]=255;}
+    else if(bg[i]){id.data[i*4]=fg?255:0;id.data[i*4+1]=fg?255:214;id.data[i*4+2]=255;id.data[i*4+3]=fg?60:220;}
   }
   ox.putImageData(id,0,0);S.outline=oc;
 }
-function showBeforeReview(){
-  setAspect($("#revStage"),S.W/S.H);
-  const ri=$("#revImg");ri.width=S.W;ri.height=S.H;ri.getContext("2d").drawImage(S.before,0,0);
-  drawRevOutline();updateSelBox();
-  show("stepBeforeReview");
-}
-function drawRevOutline(){const ro=$("#revOl");ro.width=S.outline.width;ro.height=S.outline.height;ro.getContext("2d").drawImage(S.outline,0,0);}
-function updateSelBox(tmp){
-  const r=tmp||S.roi,b=$("#selBox");
-  if(!r){b.classList.add("hidden");return;}
-  b.classList.remove("hidden");b.style.left=r.x*100+"%";b.style.top=r.y*100+"%";b.style.width=r.w*100+"%";b.style.height=r.h*100+"%";
-}
-(function selectSetup(){
-  const st=$("#revStage");let start=null,cur=null;
-  const pos=e=>{const b=st.getBoundingClientRect();return{x:Math.min(1,Math.max(0,(e.clientX-b.left)/b.width)),y:Math.min(1,Math.max(0,(e.clientY-b.top)/b.height))};};
-  st.addEventListener("pointerdown",e=>{start=pos(e);cur=null;st.setPointerCapture(e.pointerId);});
-  st.addEventListener("pointermove",e=>{if(!start)return;const p=pos(e);
-    cur={x:Math.min(start.x,p.x),y:Math.min(start.y,p.y),w:Math.abs(p.x-start.x),h:Math.abs(p.y-start.y)};updateSelBox(cur);});
-  st.addEventListener("pointerup",()=>{
-    if(!start)return;let r=cur;
-    if(!r||r.w<0.05||r.h<0.03){ // a tap: make a box around the tap point
-      const bw=0.4,bh=0.22;r={x:Math.min(1-bw,Math.max(0,start.x-bw/2)),y:Math.min(1-bh,Math.max(0,start.y-bh/2)),w:bw,h:bh};}
-    start=null;S.roi=r;computeFocus();drawRevOutline();updateSelBox();
-    $("#revStatus").textContent=S.fPts.length/2<25?"Not much to lock onto in that box. Try a box around an object with clear edges.":"Locked onto the object in the box. Drag again to change it.";
-  });
-  st.addEventListener("pointercancel",()=>{start=null;updateSelBox();});
-})();
 
-/* ---------------- Camera ---------------- */
-// Problems we can spot before even asking for the camera
-function camEnvProblem(){
-  const ua=navigator.userAgent||"";
-  const ourApp=/SBLineupApp/.test(ua)||!!window.SBAndroid;
-  const inApp=!ourApp&&/Claude|FBAN|FBAV|Instagram|Snapchat|Line\/|; wv\)|GSA\//i.test(ua);
-  if(!window.isSecureContext)return "This page has to be opened from its https link.";
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||inApp)
-    return "This browser won't give the page the camera. It's probably the browser built into another app. Open <b>squeegeebros.github.io/lineup</b> in <b>Safari</b> (iPhone) or <b>Chrome</b> (Android).";
-  return "";
+/* =========================================================
+   Capture
+   ========================================================= */
+function grabFrame(){
+  const cr=liveCrop();const k=Math.min(1,1600/Math.max(cr.w,cr.h));
+  const c=mk(Math.round(cr.w*k),Math.round(cr.h*k));const x=c.getContext("2d");x.imageSmoothingQuality="high";x.drawImage(video,cr.x,cr.y,cr.w,cr.h,0,0,c.width,c.height);return c;
 }
-function camErrText(e){
-  const n=e&&e.name||"Error";
-  if(n==="NotAllowedError"||n==="SecurityError")return "Camera permission is blocked for this site.<br><b>iPhone (Safari):</b> tap <b>aA</b> in the address bar, then Website Settings, then Camera: Allow. Reload the page. Also check iPhone Settings, then Safari, then Camera.<br><b>Android (Chrome):</b> tap the icon left of the address, then Permissions, then Camera: Allow. Reload the page.";
-  if(n==="NotFoundError"||n==="OverconstrainedError")return "No usable camera was found on this device.";
-  if(n==="NotReadableError"||n==="AbortError")return "Another app is using the camera. Close any camera, video-call or scanner apps, then try again.";
-  return "The camera couldn't start.";
+function flash(){const f=$("#flash");f.classList.add("on");requestAnimationFrame(()=>requestAnimationFrame(()=>f.classList.remove("on")));buzz(20);}
+async function saveBefore(canvas,withSensors){
+  const rec={id:uid(),t:Date.now(),blob:await canvasBlob(canvas,0.9),thumb:thumbOf(canvas,200),
+    roll:withSensors&&SENS.ok?SENS.roll:null,pitch:withSensors&&SENS.ok?SENS.pitch:null,roi:S.lock?{...S.lock}:null};
+  await DB.put("befores",rec);await refreshLists();
+  S.lock=null;S.subj=null;setModeUI();
+  toast("Before saved. When the job's done, tap AFTER.",2400);
 }
-function camFail(mode,html,e){
-  show(mode==="after"?"stepAfter":"stepBefore");
-  const el=mode==="before"?$("#beforeAlert"):$("#afterAlert");
-  el.innerHTML="<b>Camera didn't open.</b> "+html+(e?'<br><span style="opacity:.6;font-size:12px">Code: '+(e.name||"")+" "+(e.message||"")+"</span>":"");
-  el.style.display="block";
+async function onShutter(){
+  askMotion();
+  if(!S.stream||!video.videoWidth)return;
+  if(S.mode==="before"){flash();await saveBefore(grabFrame(),true);}
+  else{flash();const c=grabFrame();await finishAfter(c,c.width,c.height,true);}
 }
-function waitVideo(v,ms){return new Promise(res=>{const t0=Date.now();(function poll(){if(v.videoWidth>0)return res(true);if(Date.now()-t0>ms)return res(false);setTimeout(poll,100);})();});}
-async function openCam(mode){
-  S.camMode=mode;
-  $("#beforeAlert").style.display="none";$("#afterAlert").style.display="none";
-  const env=camEnvProblem();if(env){camFail(mode,env);return;}
-  const isAfter=mode==="after";
-  // Show the camera screen first: some phones won't start video in a hidden element
-  $("#camTitle").textContent=isAfter?"Line up the after shot":"Before photo";
-  $("#camLead").textContent=isAfter?"Move until the blue outline sits right on the real object and the bar turns green.":"Frame the shot, then tap the button.";
-  ["#camGhost","#camOl","#hud","#camCtrls"].forEach(s=>$(s).classList.add("hidden"));
-  setAspect($("#camStage"),isAfter?S.W/S.H:0.75);
-  $("#camStatus").textContent="Starting camera…";$("#camStatus").classList.remove("hidden");
-  show("stepCam");
-  const tries=[{video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false},
-               {video:{facingMode:"environment"},audio:false},{video:true,audio:false}];
-  let stream=null,err=null;
-  for(const c of tries){
-    try{stream=await navigator.mediaDevices.getUserMedia(c);break;}
-    catch(e){err=e;if(e.name==="NotAllowedError"||e.name==="SecurityError")break;}
-  }
-  if(!stream){camFail(mode,camErrText(err),err);return;}
-  if(!$("#stepCam").classList.contains("active")){stream.getTracks().forEach(t=>t.stop());return;} // cancelled while asking
-  S.stream=stream;
-  const v=$("#video");v.muted=true;v.setAttribute("playsinline","");v.setAttribute("muted","");
-  v.srcObject=stream;v.play().catch(()=>{});
-  if(!(await waitVideo(v,4000))){
-    $("#camStatus").textContent="Tap here to start the camera";
-    await new Promise(r=>{const go=()=>{v.play().catch(()=>{});r();};$("#camStage").addEventListener("click",go,{once:true});});
-    if(!(await waitVideo(v,4000))){stopCam();camFail(mode,"The camera opened but no picture came through. Close other apps using the camera, reload this page and try again.");return;}
-  }
-  if(!S.stream)return; // cancelled meanwhile
-  $("#camStatus").classList.add("hidden");
-  $("#shutter").classList.remove("go");
-  if(isAfter){
-    ["#camGhost","#camOl","#hud","#camCtrls"].forEach(s=>$(s).classList.remove("hidden"));
-    $("#camGhost").src=S.beforeUrl;$("#camGhost").style.opacity=$("#camGhostOp").value/100;
-    const o=$("#camOl");o.width=S.outline.width;o.height=S.outline.height;o.getContext("2d").drawImage(S.outline,0,0);
-    S.ema=null;S.wasGood=false;startLoop();
-  }else{
-    setAspect($("#camStage"),v.videoWidth/v.videoHeight);
-  }
-}
-function stopCam(){
-  clearTimeout(S.loop);S.loop=0;
-  if(S.stream){S.stream.getTracks().forEach(t=>t.stop());S.stream=null;}
-  $("#video").srcObject=null;
-}
-function startLoop(){
-  const v=$("#video");
-  const tick=()=>{
-    if(!S.stream)return;
-    if(v.videoWidth){
-      const M=frameEdges(v,coverCrop(v.videoWidth,v.videoHeight,S.W/S.H));
-      const sc=matchScore(M,ID());
-      let b=search(M,24,3,[0.92,0.96,1,1.04,1.08],[0]);
-      b=search(M,2,1,[b.s-0.02,b.s,b.s+0.02],[0],{dx:b.dx,dy:b.dy});
-      const e=S.ema,a=0.45;
-      S.ema=e?{sc:e.sc*(1-a)+sc*a,dx:e.dx*(1-a)+b.dx*a,dy:e.dy*(1-a)+b.dy*a,s:e.s*(1-a)+b.s*a}:{sc,dx:b.dx,dy:b.dy,s:b.s};
-      renderHud();
-    }
-    S.loop=setTimeout(tick,140);
-  };
-  tick();
-}
-function renderHud(){
-  const e=S.ema,pct=Math.round(e.sc);
-  const fill=$("#mFill");fill.style.width=pct+"%";
-  const good=pct>=80,ok=pct>=50;
-  fill.style.background=good?"var(--ok)":ok?"var(--warn)":"var(--bad)";
-  $("#mTxt").textContent="Match "+pct+"%"+(good?" · lined up":ok?" · close":"");
-  // e.dx>0: the object sits to the right of where it was -> aim right, etc.
-  const h=[],t=Math.max(2,AW*0.015);
-  if(e.dx>t)h.push("Aim right →");else if(e.dx<-t)h.push("← Aim left");
-  if(e.dy>t)h.push("↓ Tilt down");else if(e.dy<-t)h.push("↑ Tilt up");
-  if(e.s>1.03)h.push("Step back");else if(e.s<0.97)h.push("Step closer");
-  $("#hint").textContent=good?"Hold steady and take it":(h.length?h.join(" · "):(ok?"Almost there":"Find the outline"));
-  $("#shutter").classList.toggle("go",good);
-  if(good&&!S.wasGood&&navigator.vibrate){try{navigator.vibrate(40);}catch(_){}}
-  S.wasGood=good;
-}
-function capture(){
-  const v=$("#video");if(!v.videoWidth)return;
-  if(S.camMode==="before"){
-    const c=mk(v.videoWidth,v.videoHeight);c.getContext("2d").drawImage(v,0,0);
-    stopCam();setBefore(c,c.width,c.height);
-  }else{
-    const crop=coverCrop(v.videoWidth,v.videoHeight,S.W/S.H);
-    const c=mk(Math.round(crop.w),Math.round(crop.h));c.getContext("2d").drawImage(v,crop.x,crop.y,crop.w,crop.h,0,0,c.width,c.height);
-    stopCam();setAfter(c,c.width,c.height,true);
-  }
+async function finishAfter(src,sw,sh,fromLive){
+  busy(true,"Matching…");
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    const cr=coverCrop(sw,sh,S.W/S.H);
+    const c=mk(S.W,S.H);const x=c.getContext("2d");x.imageSmoothingQuality="high";x.drawImage(src,cr.x,cr.y,cr.w,cr.h,0,0,S.W,S.H);
+    S.after=c;S.aDil=frameEdges(c,null);
+    autoAlign(fromLive);
+    const rec=S.cur;
+    const comp=compose();
+    const pair={id:uid(),t:Date.now(),before:rec,beforeBlob:await canvasBlob(S.before,0.92),afterBlob:await canvasBlob(S.after,0.92),T:{...S.T},roi:S.roi,
+      composite:await canvasBlob(comp.canvas,0.92),thumb:thumbOf(comp.small,260)};
+    await DB.put("pairs",pair);await DB.del("befores",rec.id);await refreshLists();
+    S.pair=pair;
+    stopCam();showResult(comp);
+  }finally{busy(false);}
 }
 
-/* ---------------- After + align ---------------- */
-function setAfter(src,sw,sh,fromLive){
-  const crop=coverCrop(sw,sh,S.W/S.H);
-  const c=mk(S.W,S.H);const x=c.getContext("2d");x.imageSmoothingQuality="high";
-  x.drawImage(src,crop.x,crop.y,crop.w,crop.h,0,0,S.W,S.H);
-  S.after=c;S.aDil=frameEdges(c,null);
-  autoAlign(fromLive);
-  setAspect($("#alStage"),S.W/S.H);
-  const k=Math.min(1,900/Math.max(S.W,S.H));const ac=$("#alCanvas");ac.width=Math.round(S.W*k);ac.height=Math.round(S.H*k);
-  show("stepAlign");renderAlign();
-}
+/* =========================================================
+   Align + compose
+   ========================================================= */
 function autoAlign(fromLive){
   const base=matchScore(S.aDil,ID());
   const scales=[];for(let s=0.84;s<=1.161;s+=0.04)scales.push(+s.toFixed(2));
-  const rots=[-0.035,0,0.035];
-  let b=search(S.aDil,fromLive?18:54,3,scales,rots);
+  let b=search(S.aDil,54,3,scales,[-0.035,0,0.035]);
   b=search(S.aDil,3,1,[b.s-0.02,b.s,b.s+0.02],[b.r-0.017,b.r,b.r+0.017],{dx:b.dx,dy:b.dy});
   const T={dx:b.dx,dy:b.dy,s:b.s,r:b.r};
-  S.T=matchScore(S.aDil,T)>base+3?T:ID();   // keep the auto-match only if it actually helps
-  syncAlignCtrls();
+  S.T=matchScore(S.aDil,T)>base+3?T:ID();
 }
-function syncAlignCtrls(){$("#alZoom").value=(100/S.T.s).toFixed(1);$("#alRot").value=(-S.T.r*180/Math.PI).toFixed(1);}
-// Draw the after photo moved into the before photo's frame (inverse of T)
 function drawAligned(ctx,w,h){
   const k=w/S.W,u=S.W/AW,cx=S.W/2,cy=S.H/2,T=S.T;
   ctx.fillStyle="#0b1f33";ctx.fillRect(0,0,w,h);
   ctx.save();ctx.scale(k,k);ctx.translate(cx,cy);ctx.scale(1/T.s,1/T.s);ctx.rotate(-T.r);ctx.translate(-cx-T.dx*u,-cy-T.dy*u);
   ctx.imageSmoothingQuality="high";ctx.drawImage(S.after,0,0);ctx.restore();
 }
-let alOl=true;
-function renderAlign(){
-  const c=$("#alCanvas"),x=c.getContext("2d");drawAligned(x,c.width,c.height);
-  const g=$("#alGhost").value/100;if(g>0){x.globalAlpha=g;x.drawImage(S.before,0,0,c.width,c.height);x.globalAlpha=1;}
-  if(alOl){x.save();x.shadowColor="#000";x.shadowBlur=2;x.drawImage(S.outline,0,0,c.width,c.height);x.restore();}
-  $("#alScore").textContent=matchScore(S.aDil,S.T)+"%";
-}
-(function dragSetup(){
-  const c=$("#alCanvas");let last=null;
-  c.addEventListener("pointerdown",e=>{last={x:e.clientX,y:e.clientY};c.setPointerCapture(e.pointerId);});
-  c.addEventListener("pointermove",e=>{if(!last)return;const k=AW/c.clientWidth*S.T.s;
-    S.T.dx-=(e.clientX-last.x)*k;S.T.dy-=(e.clientY-last.y)*k;last={x:e.clientX,y:e.clientY};renderAlign();});
-  const end=()=>{last=null;};c.addEventListener("pointerup",end);c.addEventListener("pointercancel",end);
-})();
-
-/* ---------------- Result ---------------- */
-let finalBlob=null;
-// Area of the frame that the moved after photo fully covers, so the export has no empty bands
 function overlapRect(){
   const u=S.W/AW,T=S.T,cx=S.W/2,cy=S.H/2,c=Math.cos(-T.r),s=Math.sin(-T.r);
   const m=(x,y)=>{x=(x-cx-T.dx*u)/T.s;y=(y-cy-T.dy*u)/T.s;return[cx+c*x-s*y,cy+s*x+c*y];};
@@ -580,18 +834,13 @@ function overlapRect(){
   const x=Math.ceil(x0+1),y=Math.ceil(y0+1);
   return{x,y,w:Math.floor(x1-1)-x,h:Math.floor(y1-1)-y};
 }
-function buildResult(){
+// Cropped before/after pair + branded share image
+function compose(){
   const full=mk(S.W,S.H);drawAligned(full.getContext("2d"),S.W,S.H);
   const R=overlapRect(),W=R.w,H=R.h;
   const B=mk(W,H),A=mk(W,H);
   B.getContext("2d").drawImage(S.before,R.x,R.y,W,H,0,0,W,H);
   A.getContext("2d").drawImage(full,R.x,R.y,W,H,0,0,W,H);
-  const cb=$("#cmpBefore"),ca=$("#cmpAfter");
-  const k=Math.min(1,1000/Math.max(W,H));
-  [cb,ca].forEach(c=>{c.width=Math.round(W*k);c.height=Math.round(H*k);});
-  cb.getContext("2d").drawImage(B,0,0,cb.width,cb.height);
-  ca.getContext("2d").drawImage(A,0,0,ca.width,ca.height);
-  setAspect($("#cmpStage"),W/H);setCmp(50);$("#cmpRange").value=50;
   const ps=1200/Math.max(W,H),pw=Math.round(W*ps),ph=Math.round(H*ps);
   const portrait=H>=W,gap=8;
   const bw=portrait?pw*2+gap:pw,bh=portrait?ph:ph*2+gap,foot=Math.round(Math.max(bw,bh)*0.055);
@@ -601,97 +850,207 @@ function buildResult(){
   x.drawImage(B,0,0,pw,ph);
   const ax=portrait?pw+gap:0,ay=portrait?0:ph+gap;
   x.drawImage(A,ax,ay,pw,ph);
-  const fs=Math.round(Math.max(pw,ph)*0.032),font="-apple-system,Segoe UI,Roboto,Arial,sans-serif";
-  const tag=(t,X,Y)=>{x.font="700 "+fs+"px "+font;const tw=x.measureText(t).width;
-    const p=fs*0.55;x.fillStyle="rgba(11,31,51,.85)";x.fillRect(X+fs*.6,Y+fs*.6,tw+p*2,fs+p*1.4);x.fillStyle="#fff";x.textBaseline="top";x.fillText(t,X+fs*.6+p,Y+fs*.6+p*.75);};
+  const fs=Math.round(Math.max(pw,ph)*0.03),font="Inter,-apple-system,Segoe UI,Roboto,Arial,sans-serif";
+  const tag=(t,X,Y)=>{x.font="800 "+fs+"px "+font;const tw=x.measureText(t).width;const p=fs*0.6;
+    const bx=X+fs*.7,by=Y+fs*.7,bw2=tw+p*2,bh2=fs+p*1.3,r=bh2/2;
+    x.fillStyle="rgba(11,15,20,.72)";x.beginPath();x.moveTo(bx+r,by);x.arcTo(bx+bw2,by,bx+bw2,by+bh2,r);x.arcTo(bx+bw2,by+bh2,bx,by+bh2,r);x.arcTo(bx,by+bh2,bx,by,r);x.arcTo(bx,by,bx+bw2,by,r);x.fill();
+    x.fillStyle="#fff";x.textBaseline="middle";x.fillText(t,bx+p,by+bh2/2+1);};
   tag("BEFORE",0,0);tag("AFTER",ax,ay);
   const fy=oh-foot;x.fillStyle="#0b1f33";x.fillRect(0,fy,ow,foot);
-  x.fillStyle="#00e5ff";x.fillRect(0,fy,ow,Math.max(3,foot*0.06));
+  x.fillStyle="#00C2FF";x.fillRect(0,fy,ow,Math.max(3,foot*0.05));
   x.textBaseline="middle";x.fillStyle="#fff";x.font="700 "+Math.round(foot*0.36)+"px "+font;
   x.textAlign="left";x.fillText("Squeegee Bros Window Cleaning",foot*0.4,fy+foot*0.53);
   x.textAlign="right";x.font="600 "+Math.round(foot*0.3)+"px "+font;x.fillText("321-271-6465",ow-foot*0.4,fy+foot*0.53);
   x.textAlign="left";
-  o.toBlob(b=>{finalBlob=b;$("#finalImg").src=URL.createObjectURL(b);},"image/jpeg",0.92);
-  show("stepResult");
+  return{canvas:o,small:o,B,A};
 }
-function setCmp(v){$("#cmpBefore").style.clipPath="inset(0 "+(100-v)+"% 0 0)";$("#cmpHandle").style.left="calc("+v+"% - 1.5px)";}
-async function download(){
-  if(!finalBlob)return;
+
+/* =========================================================
+   Result view
+   ========================================================= */
+let resultComp=null,cmpPos=50,sideUrl=null;
+function showResult(comp){
+  resultComp=comp;
+  $("#result").classList.remove("hidden");
+  const B=comp.B,A=comp.A;
+  const cb=$("#cmpB"),ca=$("#cmpA");const k=Math.min(1,1100/Math.max(B.width,B.height));
+  [cb,ca].forEach(c=>{c.width=Math.round(B.width*k);c.height=Math.round(B.height*k);});
+  cb.getContext("2d").drawImage(B,0,0,cb.width,cb.height);ca.getContext("2d").drawImage(A,0,0,ca.width,ca.height);
+  if(sideUrl)URL.revokeObjectURL(sideUrl);
+  comp.canvas.toBlob(b=>{resultComp.blob=b;sideUrl=URL.createObjectURL(b);$("#sideImg").src=sideUrl;},"image/jpeg",0.92);
+  setView("slider");layoutCmp();setCmp(50);
+}
+function layoutCmp(){
+  const area=$("#cmpArea"),c=$("#cmp"),cb=$("#cmpB");if(!cb.width)return;
+  const aw=area.clientWidth-28,ah=area.clientHeight-12,a=cb.width/cb.height;
+  let w=aw,h=w/a;if(h>ah){h=ah;w=h*a;}
+  c.style.width=w+"px";c.style.height=h+"px";
+}
+window.addEventListener("resize",()=>{if(!$("#result").classList.contains("hidden"))layoutCmp();});
+function setCmp(v){cmpPos=Math.max(0,Math.min(100,v));$("#cmpB").style.clipPath=`inset(0 ${100-cmpPos}% 0 0)`;$("#knob").style.left=cmpPos+"%";$("#knobLine").style.left=cmpPos+"%";}
+(function cmpDrag(){const c=$("#cmp");let on=false;
+  const at=e=>{const r=c.getBoundingClientRect();setCmp((e.clientX-r.left)/r.width*100);};
+  c.addEventListener("pointerdown",e=>{on=true;c.setPointerCapture(e.pointerId);at(e);});
+  c.addEventListener("pointermove",e=>{if(on)at(e);});
+  c.addEventListener("pointerup",()=>on=false);c.addEventListener("pointercancel",()=>on=false);})();
+function setView(v){$("#vSlider").classList.toggle("on",v==="slider");$("#vSide").classList.toggle("on",v==="side");
+  $("#cmp").classList.toggle("hidden",v!=="slider");$("#sideImg").classList.toggle("hidden",v!=="side");if(v==="slider")layoutCmp();}
+$("#vSlider").onclick=()=>setView("slider");$("#vSide").onclick=()=>setView("side");
+function closeResult(){$("#result").classList.add("hidden");enterBefore();startCam();}
+$("#resClose").onclick=closeResult;
+$("#resDel").onclick=async e=>{const b=e.currentTarget;
+  if(!b.dataset.confirm){b.dataset.confirm="1";b.style.background="rgba(255,90,78,.25)";toast("Tap the trash again to delete");setTimeout(()=>{delete b.dataset.confirm;b.style.background="";},2500);return;}
+  delete b.dataset.confirm;b.style.background="";
+  if(S.pair){await DB.del("pairs",S.pair.id);await refreshLists();}
+  toast("Deleted");closeResult();};
+$("#retakeBtn").onclick=async()=>{
+  if(!S.pair)return;
+  const rec=S.pair.before;await DB.put("befores",rec);await DB.del("pairs",S.pair.id);await refreshLists();
+  $("#result").classList.add("hidden");await enterAfter(rec);startCam();
+};
+async function sharePair(){
+  const blob=resultComp&&resultComp.blob||(S.pair&&S.pair.composite);if(!blob)return;
   const stamp=new Date().toISOString().slice(0,16).replace(/[-:T]/g,"");
-  const name="squeegee-bros-before-after-"+(S.job||"job")+"-"+stamp+".jpg";
+  const name="squeegee-bros-before-after-"+stamp+".jpg";
   if(window.SBAndroid&&window.SBAndroid.saveAndShare){
-    const b64=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(String(fr.result).split(",")[1]);fr.readAsDataURL(finalBlob);});
+    const b64=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(String(fr.result).split(",")[1]);fr.readAsDataURL(blob);});
     window.SBAndroid.saveAndShare(b64,name);return;
   }
-  const file=new File([finalBlob],name,{type:"image/jpeg"});
-  // On phones, the share sheet lets you save to Photos or send it straight to a customer
-  if(navigator.canShare&&navigator.canShare({files:[file]})){
-    try{await navigator.share({files:[file]});return;}catch(e){if(e&&e.name==="AbortError")return;}
-  }
-  if(window.claude&&typeof window.claude.use==="function"){
-    try{const d=await window.claude.use("downloads");
-      if(d){await d.save({filename:name,data:finalBlob});toast("Saved");return;}
-    }catch(e){if(e&&e.code==="declined")return;}
-  }
-  const a=document.createElement("a");a.href=URL.createObjectURL(finalBlob);a.download=name;document.body.appendChild(a);a.click();a.remove();
+  const file=new File([blob],name,{type:"image/jpeg"});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file]});return;}catch(e){if(e&&e.name==="AbortError")return;}}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();
+}
+$("#shareBtn").onclick=sharePair;
+async function openPair(p){
+  busy(true,"Opening…");
+  try{
+    const bi=await blobImg(p.beforeBlob),ai=await blobImg(p.afterBlob);
+    S.W=bi.naturalWidth;S.H=bi.naturalHeight;
+    const bc=mk(S.W,S.H);bc.getContext("2d").drawImage(bi,0,0);S.before=bc;
+    const ac=mk(S.W,S.H);ac.getContext("2d").drawImage(ai,0,0,S.W,S.H);S.after=ac;
+    AH=Math.max(60,Math.round(AW*S.H/S.W));S.T={...p.T};S.roi=p.roi||null;S.cur=p.before;S.pair=p;S.mA=null;S.aDil=null;
+    stopCam();showResult(compose());
+  }finally{busy(false);}
 }
 
-/* ---------------- File inputs ---------------- */
-function loadFile(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file);const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=u;});}
-$("#beforeFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;const i=await loadFile(f);setBefore(i,i.naturalWidth,i.naturalHeight);e.target.value="";});
-$("#afterFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;const i=await loadFile(f);setAfter(i,i.naturalWidth,i.naturalHeight,false);e.target.value="";});
-
-/* ---------------- Step 1 wiring ---------------- */
-(function(){const p=camEnvProblem();if(p){const b=$("#envBanner");b.innerHTML="<b>Live camera won't work in this browser.</b> "+p;b.style.display="block";}})();
-const chips=$("#chips");
-Object.entries(JOBS).forEach(([k,j])=>{const b=document.createElement("button");b.className="chip";b.textContent=j.name;b.onclick=()=>pickJob(k,b);chips.appendChild(b);});
-function pickJob(k,btn){
-  S.job=k;S.shot=null;$("#toBefore").disabled=true;
-  chips.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c===btn));
-  const w=$("#shots");w.innerHTML="";
-  JOBS[k].shots.forEach((s,i)=>{const d=document.createElement("div");d.className="shot";
-    d.innerHTML='<div class="t"><span>'+s.t+'</span><span class="n">'+(i===0?"Top pick":"Shot "+(i+1))+'</span></div><div class="a">'+s.a+'</div><div class="w">'+s.w+'</div><div class="tip"><b>Tip:</b> '+s.tip+'</div>';
-    d.onclick=()=>{S.shot=i;w.querySelectorAll(".shot").forEach(x=>x.classList.toggle("on",x===d));$("#toBefore").disabled=false;};
-    w.appendChild(d);});
-  $("#shotWrap").classList.remove("hidden");
+/* =========================================================
+   Adjust view
+   ========================================================= */
+let adjSaved=null,adjOl=true;
+function ensureAnalysis(){
+  if(!S.mA){S.mA=sobel(S.before,null,AW,AH,1);const ow=Math.min(480,S.W),oh=Math.round(ow*S.H/S.W);S.oW=ow;S.oH=oh;S.mD=sobel(S.before,null,ow,oh,1);computeFocus();}
+  if(!S.aDil)S.aDil=frameEdges(S.after,null);
 }
-$("#toBefore").onclick=()=>{const s=JOBS[S.job].shots[S.shot];$("#beforeShotTxt").textContent=s.t+": "+s.a;show("stepBefore");};
-$("#backJob").onclick=()=>show("stepJob");
-$("#beforeLive").onclick=()=>openCam("before");
-$("#shutter").onclick=capture;
-$("#camCancel").onclick=()=>{const m=S.camMode;stopCam();show(m==="after"?"stepAfter":"stepBefore");};
-$("#camGhostOp").oninput=e=>{$("#camGhost").style.opacity=e.target.value/100;};
-$("#camTgOl").onclick=e=>{const on=!e.target.classList.contains("on");e.target.classList.toggle("on",on);$("#camOl").classList.toggle("hidden",!on);};
-$("#revTg").onclick=e=>{const on=!e.target.classList.contains("on");e.target.classList.toggle("on",on);e.target.textContent=on?"Outline on":"Outline off";$("#revOl").style.display=on?"":"none";};
-$("#toAfter").onclick=()=>show("stepAfter");
-$("#revWhole").onclick=()=>{S.roi=null;computeFocus();drawRevOutline();updateSelBox();$("#revStatus").textContent="Using the whole picture. Drag a box to lock onto one object.";};
-$("#redoBefore").onclick=()=>show("stepBefore");
-$("#backReview").onclick=()=>show("stepBeforeReview");
-$("#afterLive").onclick=()=>openCam("after");
-$("#alZoom").oninput=e=>{S.T.s=100/e.target.value;renderAlign();};
-$("#alRot").oninput=e=>{S.T.r=-e.target.value*Math.PI/180;renderAlign();};
-$("#alGhost").oninput=renderAlign;
-$("#alTgOl").onclick=e=>{alOl=!alOl;e.target.classList.toggle("on",alOl);renderAlign();};
-$("#alAuto").onclick=()=>{autoAlign(false);renderAlign();toast("Auto-matched");};
-$("#alReset").onclick=()=>{S.T=ID();syncAlignCtrls();renderAlign();};
-$("#toResult").onclick=buildResult;
-$("#redoAfter").onclick=()=>show("stepAfter");
-$("#cmpRange").oninput=e=>setCmp(+e.target.value);
-$("#dlBtn").onclick=download;
-$("#resAdjust").onclick=()=>{show("stepAlign");renderAlign();};
-$("#restart").onclick=()=>{location.hash="";location.reload();};
+function openAdjust(){
+  ensureAnalysis();adjSaved={...S.T};
+  $("#adjust").classList.remove("hidden");
+  const c=$("#adjCanvas"),k=Math.min(1,900/Math.max(S.W,S.H));c.width=Math.round(S.W*k);c.height=Math.round(S.H*k);
+  syncAdj();renderAdj();
+}
+function syncAdj(){const z=100/S.T.s,r=-S.T.r*180/Math.PI;$("#adjZoom").value=z.toFixed(1);$("#adjRot").value=r.toFixed(1);$("#adjZoomV").textContent=Math.round(z)+"%";$("#adjRotV").textContent=r.toFixed(1)+"°";}
+function renderAdj(){
+  const c=$("#adjCanvas"),x=c.getContext("2d");drawAligned(x,c.width,c.height);
+  const g=$("#adjGhost").value/100;$("#adjGhostV").textContent=Math.round(g*100)+"%";
+  if(g>0){x.globalAlpha=g;x.drawImage(S.before,0,0,c.width,c.height);x.globalAlpha=1;}
+  x.save();x.shadowColor="#000";x.shadowBlur=2;x.drawImage(S.outline,0,0,c.width,c.height);x.restore();
+  $("#adjScore").textContent=matchScore(S.aDil,S.T)+"%";
+}
+(function adjDrag(){const c=$("#adjCanvas");let last=null;
+  c.addEventListener("pointerdown",e=>{last={x:e.clientX,y:e.clientY};c.setPointerCapture(e.pointerId);});
+  c.addEventListener("pointermove",e=>{if(!last)return;const k=AW/c.clientWidth*S.T.s;S.T.dx-=(e.clientX-last.x)*k;S.T.dy-=(e.clientY-last.y)*k;last={x:e.clientX,y:e.clientY};renderAdj();});
+  const end=()=>last=null;c.addEventListener("pointerup",end);c.addEventListener("pointercancel",end);})();
+$("#adjZoom").oninput=e=>{S.T.s=100/e.target.value;$("#adjZoomV").textContent=Math.round(e.target.value)+"%";renderAdj();};
+$("#adjRot").oninput=e=>{S.T.r=-e.target.value*Math.PI/180;$("#adjRotV").textContent=(+e.target.value).toFixed(1)+"°";renderAdj();};
+$("#adjGhost").oninput=renderAdj;
+$("#adjAuto").onclick=()=>{busy(true,"Matching…");setTimeout(()=>{autoAlign(false);syncAdj();renderAdj();busy(false);},30);};
+$("#adjReset").onclick=()=>{S.T=ID();syncAdj();renderAdj();};
+$("#adjCancel").onclick=()=>{S.T=adjSaved;$("#adjust").classList.add("hidden");};
+$("#adjDone").onclick=async()=>{
+  busy(true,"Saving…");
+  try{const comp=compose();
+    if(S.pair){S.pair.T={...S.T};S.pair.composite=await canvasBlob(comp.canvas,0.92);S.pair.thumb=thumbOf(comp.canvas,260);await DB.put("pairs",S.pair);await refreshLists();}
+    $("#adjust").classList.add("hidden");showResult(comp);}finally{busy(false);}
+};
+$("#adjBtn").onclick=openAdjust;
 
-if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("./sw.js").catch(()=>{});}
-// Android back button: step back one screen. Returns false on the first screen so the app can close.
+/* =========================================================
+   Wiring
+   ========================================================= */
+$("#shutter").onclick=onShutter;
+$("#pill").onclick=()=>{askMotion();openSheet("guide");};
+$("#mBefore").onclick=()=>{if(S.mode!=="before")enterBefore();};
+$("#mAfter").onclick=()=>{if(S.mode==="after")return;if(!befores.length){toast("Take a before photo first");return;}
+  if(befores.length===1)enterAfter(befores[0]);else openSheet("pick");};
+$("#stackBtn").onclick=()=>{if(!befores.length&&S.mode==="before"){toast("Before photos waiting for an after show up here");return;}openSheet("pick");};
+$("#pairsBtn").onclick=()=>openSheet("pairs");
+$("#lockChip").onclick=e=>{e.stopPropagation();S.lock=null;setModeUI();};
+$("#ghostBtn").onclick=e=>{e.stopPropagation();const steps=[0,0.3,0.6];S.ghost=steps[(steps.indexOf(S.ghost)+1)%steps.length];$("#ghost").style.opacity=S.ghost;$("#ghostPct").textContent=Math.round(S.ghost*100)+"%";};
+
+// Tap on the camera to lock onto an object (before mode)
+function lockAt(tx,ty){
+  setAHForStage();
+  const c=S.lastClean;let box=null;
+  if(c&&c.length===AW*AH){
+    const px=tx*AW,py=ty*AH;
+    const rx0=Math.max(0,Math.round(px-AW*0.26)),rx1=Math.min(AW,Math.round(px+AW*0.26)),ry0=Math.max(0,Math.round(py-AH*0.17)),ry1=Math.min(AH,Math.round(py+AH*0.17));
+    const lab=new Int32Array(AW*AH),stack=new Int32Array(AW*AH),comps=[];let id=0;
+    for(let y=ry0;y<ry1;y++)for(let x=rx0;x<rx1;x++){const i=y*AW+x;if(!c[i]||lab[i])continue;
+      id++;let sp=0,n=0,x0=AW,x1=0,y0=AH,y1=0,dmin=1e9;stack[sp++]=i;lab[i]=id;
+      while(sp){const j=stack[--sp];n++;const X=j%AW,Y=(j/AW)|0;if(X<x0)x0=X;if(X>x1)x1=X;if(Y<y0)y0=Y;if(Y>y1)y1=Y;const d=(X-px)*(X-px)+(Y-py)*(Y-py);if(d<dmin)dmin=d;
+        for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const XX=X+dx,YY=Y+dy;if(XX<rx0||XX>=rx1||YY<ry0||YY>=ry1)continue;const k=YY*AW+XX;if(c[k]&&!lab[k]){lab[k]=id;stack[sp++]=k;}}}
+      if(n>=8)comps.push({x0,x1,y0,y1,n,d:Math.sqrt(dmin),area:(x1-x0+1)*(y1-y0+1)});}
+    const inside=comps.filter(k=>px>=k.x0-3&&px<=k.x1+3&&py>=k.y0-3&&py<=k.y1+3).sort((a,b)=>a.area-b.area);
+    let pick=inside[0]||comps.filter(k=>k.d<AW*0.08).sort((a,b)=>a.d-b.d)[0];
+    if(pick){
+      let u={...pick};const ex=AW*0.04;
+      for(const k of comps){if(k===pick)continue;
+        if(k.x0<=u.x1+ex&&k.x1>=u.x0-ex&&k.y0<=u.y1+ex&&k.y1>=u.y0-ex&&k.area<=u.area*4){u.x0=Math.min(u.x0,k.x0);u.x1=Math.max(u.x1,k.x1);u.y0=Math.min(u.y0,k.y0);u.y1=Math.max(u.y1,k.y1);}}
+      const w=(u.x1-u.x0+1)/AW,h=(u.y1-u.y0+1)/AH;
+      box={x:u.x0/AW-w*0.08,y:u.y0/AH-Math.max(h*0.1,0.015),w:w*1.16,h:h*1.2+0.03};
+    }
+  }
+  if(!box)box={x:tx-0.2,y:ty-0.12,w:0.4,h:0.24};
+  box.w=Math.max(0.1,Math.min(1,box.w));box.h=Math.max(0.06,Math.min(1,box.h));
+  box.x=Math.max(0,Math.min(1-box.w,box.x));box.y=Math.max(0,Math.min(1-box.h,box.y));
+  return box;
+}
+stage.addEventListener("click",e=>{
+  askMotion();
+  if(S.mode!=="before"||!S.stream||e.target.closest("button"))return;
+  const r=stage.getBoundingClientRect();
+  const box=lockAt((e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height);
+  S.lock=box;S.subj={...box};buzz(15);setModeUI();renderBrackets();
+});
+
+// Fallback: photo from the phone's own camera app
+$("#fileIn").addEventListener("change",async e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;
+  const img=await blobImg(f);
+  if(S.mode==="before"){const a=stageAspect(),cr=coverCrop(img.naturalWidth,img.naturalHeight,a);const k=Math.min(1,1600/Math.max(cr.w,cr.h));
+    const c=mk(cr.w*k,cr.h*k);c.getContext("2d").drawImage(img,cr.x,cr.y,cr.w,cr.h,0,0,c.width,c.height);await saveBefore(c,false);}
+  else await finishAfter(img,img.naturalWidth,img.naturalHeight,false);
+});
+
+// Android back button
 window.sbBack=function(){
-  const cur=(document.querySelector(".step.active")||{}).id;
-  if(cur==="stepCam"){$("#camCancel").click();return true;}
-  const prev={stepBefore:"stepJob",stepBeforeReview:"stepBefore",stepAfter:"stepBeforeReview",stepAlign:"stepAfter",stepResult:"stepAlign"}[cur];
-  if(prev){show(prev);if(prev==="stepAlign")renderAlign();return true;}
+  if(!$("#busy").classList.contains("hidden"))return true;
+  if(S.sheet){closeSheet();return true;}
+  if(!$("#adjust").classList.contains("hidden")){$("#adjCancel").click();return true;}
+  if(!$("#result").classList.contains("hidden")){closeResult();return true;}
+  if(S.mode==="after"){enterBefore();return true;}
+  if(S.lock){S.lock=null;setModeUI();return true;}
   return false;
 };
-// test hook
-window.__lineup={S,setBefore,setAfter,matchScore,search,show,buildResult,computeFocus,_edges:c=>frameEdges(c,null)};
+
+if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("./sw.js").catch(()=>{});}
+
+(async function init(){
+  await DB.open();await refreshLists();setModeUI();
+  $("#pIco").innerHTML=ICONS.wait;
+  startCam();
+})();
+
+window.__lineup={S,SENS,DB,enterAfter,enterBefore,onShutter,finishAfter,openPair,refreshLists,showResult,compose};
 })();
 </script>
 </body>
