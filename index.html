@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1f33">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SB Lineup">
 <title>Squeegee Bros · Before/After Lineup (Test)</title>
@@ -675,7 +675,7 @@ $("#dlBtn").onclick=download;
 $("#resAdjust").onclick=()=>{show("stepAlign");renderAlign();};
 $("#restart").onclick=()=>{location.hash="";location.reload();};
 
-if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("sw.js").catch(()=>{});}
+if("serviceWorker" in navigator&&location.protocol==="https:"){navigator.serviceWorker.register("./sw.js").catch(()=>{});}
 // test hook
 window.__lineup={S,setBefore,setAfter,matchScore,search,show,buildResult,computeFocus,_edges:c=>frameEdges(c,null)};
 })();
