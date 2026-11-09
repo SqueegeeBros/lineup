@@ -63,6 +63,7 @@ p.lead{margin:0 0 14px;color:var(--muted);font-size:15px}
 #finalImg{width:100%;border-radius:12px;margin-top:12px;display:block;border:1px solid var(--line)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
 .toast.show{opacity:1}
+.camstatus{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:16px;text-align:center;padding:20px;background:#000}
 .hidden{display:none!important}
 .selbox{position:absolute;border:2px dashed #fff;border-radius:4px;box-shadow:0 0 0 9999px rgba(0,0,0,.38);pointer-events:none}
 #revStage{cursor:crosshair}
@@ -76,6 +77,7 @@ p.lead{margin:0 0 14px;color:var(--muted);font-size:15px}
 </header>
 
 <main>
+  <div class="alert" id="envBanner"></div>
   <!-- STEP 1: job + shot -->
   <section class="step active" id="stepJob">
     <h2>What's the job?</h2>
@@ -119,6 +121,7 @@ p.lead{margin:0 0 14px;color:var(--muted);font-size:15px}
         <div class="meter"><span id="mTxt">Lining up…</span><div class="bar"><div class="fill" id="mFill"></div></div></div>
         <div class="hint" id="hint">Finding the outline…</div>
       </div>
+      <div id="camStatus" class="camstatus hidden">Starting camera…</div>
       <button class="shutter" id="shutter" aria-label="Take photo"></button>
     </div>
     <div class="ctrls hidden" id="camCtrls">
@@ -400,36 +403,69 @@ function updateSelBox(tmp){
 })();
 
 /* ---------------- Camera ---------------- */
+// Problems we can spot before even asking for the camera
+function camEnvProblem(){
+  const ua=navigator.userAgent||"";
+  const inApp=/Claude|FBAN|FBAV|Instagram|Snapchat|Line\/|; wv\)|GSA\//i.test(ua);
+  if(!window.isSecureContext)return "This page has to be opened from its https link.";
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||inApp)
+    return "This browser won't give the page the camera. It's probably the browser built into another app. Open <b>squeegeebros.github.io/lineup</b> in <b>Safari</b> (iPhone) or <b>Chrome</b> (Android).";
+  return "";
+}
+function camErrText(e){
+  const n=e&&e.name||"Error";
+  if(n==="NotAllowedError"||n==="SecurityError")return "Camera permission is blocked for this site.<br><b>iPhone (Safari):</b> tap <b>aA</b> in the address bar, then Website Settings, then Camera: Allow. Reload the page. Also check iPhone Settings, then Safari, then Camera.<br><b>Android (Chrome):</b> tap the icon left of the address, then Permissions, then Camera: Allow. Reload the page.";
+  if(n==="NotFoundError"||n==="OverconstrainedError")return "No usable camera was found on this device.";
+  if(n==="NotReadableError"||n==="AbortError")return "Another app is using the camera. Close any camera, video-call or scanner apps, then try again.";
+  return "The camera couldn't start.";
+}
+function camFail(mode,html,e){
+  show(mode==="after"?"stepAfter":"stepBefore");
+  const el=mode==="before"?$("#beforeAlert"):$("#afterAlert");
+  el.innerHTML="<b>Camera didn't open.</b> "+html+(e?'<br><span style="opacity:.6;font-size:12px">Code: '+(e.name||"")+" "+(e.message||"")+"</span>":"");
+  el.style.display="block";
+}
+function waitVideo(v,ms){return new Promise(res=>{const t0=Date.now();(function poll(){if(v.videoWidth>0)return res(true);if(Date.now()-t0>ms)return res(false);setTimeout(poll,100);})();});}
 async function openCam(mode){
   S.camMode=mode;
-  const alertEl=mode==="before"?$("#beforeAlert"):$("#afterAlert");
-  alertEl.style.display="none";
-  try{
-    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("no media");
-    S.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false});
-  }catch(e){
-    const inClaude=/claude\.ai|claudeusercontent|anthropic/.test(document.referrer+location.host);
-    alertEl.innerHTML="<b>Camera didn't open.</b> "+(inClaude
-      ?"The Claude app blocks the camera. Open the app from its own web link instead."
-      :"Allow camera access for this site in your browser settings, then try again. For now you can use <b>Take photo with phone camera</b>.");
-    alertEl.style.display="block";return;
-  }
-  const v=$("#video");v.srcObject=S.stream;try{await v.play();}catch(e){}
-  if(!v.videoWidth)await new Promise(r=>v.addEventListener("loadedmetadata",r,{once:true}));
+  $("#beforeAlert").style.display="none";$("#afterAlert").style.display="none";
+  const env=camEnvProblem();if(env){camFail(mode,env);return;}
   const isAfter=mode==="after";
+  // Show the camera screen first: some phones won't start video in a hidden element
   $("#camTitle").textContent=isAfter?"Line up the after shot":"Before photo";
   $("#camLead").textContent=isAfter?"Move until the blue outline sits right on the real object and the bar turns green.":"Frame the shot, then tap the button.";
-  ["#camGhost","#camOl","#hud","#camCtrls"].forEach(s=>$(s).classList.toggle("hidden",!isAfter));
+  ["#camGhost","#camOl","#hud","#camCtrls"].forEach(s=>$(s).classList.add("hidden"));
+  setAspect($("#camStage"),isAfter?S.W/S.H:0.75);
+  $("#camStatus").textContent="Starting camera…";$("#camStatus").classList.remove("hidden");
+  show("stepCam");
+  const tries=[{video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false},
+               {video:{facingMode:"environment"},audio:false},{video:true,audio:false}];
+  let stream=null,err=null;
+  for(const c of tries){
+    try{stream=await navigator.mediaDevices.getUserMedia(c);break;}
+    catch(e){err=e;if(e.name==="NotAllowedError"||e.name==="SecurityError")break;}
+  }
+  if(!stream){camFail(mode,camErrText(err),err);return;}
+  if(!$("#stepCam").classList.contains("active")){stream.getTracks().forEach(t=>t.stop());return;} // cancelled while asking
+  S.stream=stream;
+  const v=$("#video");v.muted=true;v.setAttribute("playsinline","");v.setAttribute("muted","");
+  v.srcObject=stream;v.play().catch(()=>{});
+  if(!(await waitVideo(v,4000))){
+    $("#camStatus").textContent="Tap here to start the camera";
+    await new Promise(r=>{const go=()=>{v.play().catch(()=>{});r();};$("#camStage").addEventListener("click",go,{once:true});});
+    if(!(await waitVideo(v,4000))){stopCam();camFail(mode,"The camera opened but no picture came through. Close other apps using the camera, reload this page and try again.");return;}
+  }
+  if(!S.stream)return; // cancelled meanwhile
+  $("#camStatus").classList.add("hidden");
   $("#shutter").classList.remove("go");
   if(isAfter){
-    setAspect($("#camStage"),S.W/S.H);
+    ["#camGhost","#camOl","#hud","#camCtrls"].forEach(s=>$(s).classList.remove("hidden"));
     $("#camGhost").src=S.beforeUrl;$("#camGhost").style.opacity=$("#camGhostOp").value/100;
     const o=$("#camOl");o.width=S.outline.width;o.height=S.outline.height;o.getContext("2d").drawImage(S.outline,0,0);
     S.ema=null;S.wasGood=false;startLoop();
   }else{
     setAspect($("#camStage"),v.videoWidth/v.videoHeight);
   }
-  show("stepCam");
 }
 function stopCam(){
   clearTimeout(S.loop);S.loop=0;
@@ -594,6 +630,7 @@ $("#beforeFile").addEventListener("change",async e=>{const f=e.target.files[0];i
 $("#afterFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;const i=await loadFile(f);setAfter(i,i.naturalWidth,i.naturalHeight,false);e.target.value="";});
 
 /* ---------------- Step 1 wiring ---------------- */
+(function(){const p=camEnvProblem();if(p){const b=$("#envBanner");b.innerHTML="<b>Live camera won't work in this browser.</b> "+p;b.style.display="block";}})();
 const chips=$("#chips");
 Object.entries(JOBS).forEach(([k,j])=>{const b=document.createElement("button");b.className="chip";b.textContent=j.name;b.onclick=()=>pickJob(k,b);chips.appendChild(b);});
 function pickJob(k,btn){
