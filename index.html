@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Squeegee Bros · Before/After Lineup (Test)</title>
+<style>
+:root{--navy:#0b1f33;--navy2:#13304d;--blue:#1e88e5;--sky:#00e5ff;--bg:#f2f5f9;--card:#fff;--ink:#0f172a;--muted:#5b6b7f;--line:#dbe3ec;--ok:#16a34a;--warn:#f59e0b;--bad:#dc2626}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+header{background:var(--navy);color:#fff;padding:14px 16px 12px}
+header .brand{font-weight:700;letter-spacing:.2px;font-size:17px}
+header .sub{opacity:.75;font-size:13px}
+.stepper{display:flex;gap:6px;margin-top:10px}
+.stepper span{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.22)}
+.stepper span.on{background:var(--sky)}
+main{max-width:720px;margin:0 auto;padding:16px}
+.step{display:none}.step.active{display:block}
+h2{font-size:20px;margin:4px 0 4px}
+p.lead{margin:0 0 14px;color:var(--muted);font-size:15px}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chip{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 12px;font-weight:600;font-size:15px;text-align:left;color:var(--ink);cursor:pointer}
+.chip.on{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,136,229,.15)}
+.shots{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.shot{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
+.shot.on{border-color:var(--blue);box-shadow:0 0 0 3px rgba(30,136,229,.15)}
+.shot .t{font-weight:700;display:flex;justify-content:space-between;gap:8px}
+.shot .n{color:var(--blue);font-size:13px;font-weight:700}
+.shot .a{margin-top:4px;font-size:14.5px}
+.shot .w,.shot .tip{margin-top:4px;font-size:13.5px;color:var(--muted)}
+.shot .tip b{color:var(--ink)}
+.tips{margin-top:16px;background:#e8f1fb;border-radius:12px;padding:12px 14px;font-size:14px}
+.tips ul{margin:6px 0 0;padding-left:18px}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:15px 16px;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px;text-align:center}
+.btn.pri{background:var(--blue);color:#fff}
+.btn.sec{background:var(--card);color:var(--ink);border:1.5px solid var(--line)}
+.btn:disabled{opacity:.45}
+.row{display:flex;gap:10px}.row .btn{flex:1}
+.note{font-size:13.5px;color:var(--muted);margin-top:10px}
+.alert{background:#fff7e6;border:1px solid #f6d48a;border-radius:12px;padding:12px 14px;font-size:14px;margin-top:12px;display:none}
+.stage{position:relative;margin:0 auto;background:#000;border-radius:14px;overflow:hidden;width:min(100%,calc(66vh * var(--a,0.75)));aspect-ratio:var(--a,0.75);touch-action:none}
+.stage video,.stage canvas,.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.stage .ol{filter:drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000);pointer-events:none}
+.stage .ghost{pointer-events:none}
+.hud{position:absolute;left:10px;right:10px;top:10px;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.meter{background:rgba(11,31,51,.78);color:#fff;border-radius:10px;padding:8px 10px;font-size:14px;font-weight:600}
+.meter .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.2);margin-top:6px;overflow:hidden}
+.meter .fill{height:100%;width:0;background:var(--bad);transition:width .2s,background .2s}
+.hint{align-self:center;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:6px 12px;font-size:14px;font-weight:600}
+.shutter{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:68px;height:68px;border-radius:50%;border:4px solid #fff;background:rgba(255,255,255,.25);cursor:pointer}
+.shutter:active{background:rgba(255,255,255,.6)}
+.shutter.go{border-color:#4ade80;box-shadow:0 0 0 4px rgba(74,222,128,.45)}
+.ctrls{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-top:12px}
+.ctrl{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:14px}
+.ctrl label{width:74px;color:var(--muted)}
+.ctrl input[type=range]{flex:1}
+.toggles{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.tg{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600;cursor:pointer}
+.tg.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.score{font-weight:700}
+.cmp-handle{position:absolute;top:0;bottom:0;width:3px;background:#fff;box-shadow:0 0 4px rgba(0,0,0,.6);pointer-events:none}
+.tag{position:absolute;top:10px;background:rgba(11,31,51,.8);color:#fff;font-size:12px;font-weight:700;letter-spacing:1px;padding:4px 8px;border-radius:6px;pointer-events:none}
+#finalImg{width:100%;border-radius:12px;margin-top:12px;display:block;border:1px solid var(--line)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+.hidden{display:none!important}
+.selbox{position:absolute;border:2px dashed #fff;border-radius:4px;box-shadow:0 0 0 9999px rgba(0,0,0,.38);pointer-events:none}
+#revStage{cursor:crosshair}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Squeegee Bros · Before/After Lineup</div>
+  <div class="sub">Test version · one shot</div>
+  <div class="stepper"><span id="s1" class="on"></span><span id="s2"></span><span id="s3"></span><span id="s4"></span></div>
+</header>
+
+<main>
+  <!-- STEP 1: job + shot -->
+  <section class="step active" id="stepJob">
+    <h2>What's the job?</h2>
+    <p class="lead">Pick the service and you'll get the shots that sell it best.</p>
+    <div class="chips" id="chips"></div>
+    <div id="shotWrap" class="hidden">
+      <h2 style="margin-top:20px">Recommended shots</h2>
+      <p class="lead">For this test, pick one to try.</p>
+      <div class="shots" id="shots"></div>
+      <div class="tips"><b>For every lineup</b>
+        <ul>
+          <li>Stay on 1× zoom. Zooming changes the perspective, so the shots won't line up.</li>
+          <li>Pick a landmark to stand on, like a sidewalk crack or a sprinkler head.</li>
+          <li>Flash off. Try to shoot at the same time of day.</li>
+        </ul>
+      </div>
+      <button class="btn pri" id="toBefore" disabled>Next: before photo</button>
+    </div>
+  </section>
+
+  <!-- STEP 2: before -->
+  <section class="step" id="stepBefore">
+    <h2>Before photo</h2>
+    <p class="lead" id="beforeShotTxt"></p>
+    <button class="btn pri" id="beforeLive">Open live camera</button>
+    <label class="btn sec" for="beforeFile">Take photo with phone camera</label>
+    <input type="file" id="beforeFile" accept="image/*" capture="environment" class="hidden">
+    <div class="alert" id="beforeAlert"></div>
+    <button class="btn sec" id="backJob">Back</button>
+  </section>
+
+  <!-- CAMERA (shared) -->
+  <section class="step" id="stepCam">
+    <h2 id="camTitle">Camera</h2>
+    <p class="lead" id="camLead"></p>
+    <div class="stage" id="camStage">
+      <video id="video" playsinline muted autoplay></video>
+      <img id="camGhost" class="ghost hidden" alt="">
+      <canvas id="camOl" class="ol hidden"></canvas>
+      <div class="hud hidden" id="hud">
+        <div class="meter"><span id="mTxt">Lining up…</span><div class="bar"><div class="fill" id="mFill"></div></div></div>
+        <div class="hint" id="hint">Finding the outline…</div>
+      </div>
+      <button class="shutter" id="shutter" aria-label="Take photo"></button>
+    </div>
+    <div class="ctrls hidden" id="camCtrls">
+      <div class="ctrl"><label>Ghost</label><input type="range" id="camGhostOp" min="0" max="80" value="20"></div>
+      <div class="toggles"><button class="tg on" id="camTgOl">Outline</button></div>
+    </div>
+    <button class="btn sec" id="camCancel">Cancel</button>
+  </section>
+
+  <!-- STEP 2b: before review -->
+  <section class="step" id="stepBeforeReview">
+    <h2>Pick what to line up with</h2>
+    <p class="lead">Drag a box around one solid thing, like the window sill or a door frame. The outline will lock onto it.</p>
+    <div class="stage" id="revStage">
+      <canvas id="revImg"></canvas>
+      <canvas id="revOl" class="ol"></canvas>
+      <div id="selBox" class="selbox hidden"></div>
+    </div>
+    <div class="toggles" style="justify-content:center;margin-top:10px"><button class="tg" id="revWhole">Use whole picture</button><button class="tg on" id="revTg">Outline on</button></div>
+    <p class="note" id="revStatus">Using the whole picture. Drag a box to lock onto one object.</p>
+    <p class="note">Before you start cleaning, look at where you're standing so you can get back to it.</p>
+    <button class="btn pri" id="toAfter">Job done: take after photo</button>
+    <button class="btn sec" id="redoBefore">Retake before</button>
+  </section>
+
+  <!-- STEP 3: after -->
+  <section class="step" id="stepAfter">
+    <h2>After photo</h2>
+    <p class="lead">Go back to the same spot. The live camera shows the before outline on screen so you can match it.</p>
+    <button class="btn pri" id="afterLive">Open lineup camera</button>
+    <label class="btn sec" for="afterFile">Take photo with phone camera</label>
+    <input type="file" id="afterFile" accept="image/*" capture="environment" class="hidden">
+    <div class="alert" id="afterAlert"></div>
+    <button class="btn sec" id="backReview">Back</button>
+  </section>
+
+  <!-- STEP 3b: align -->
+  <section class="step" id="stepAlign">
+    <h2>Fine-tune the match</h2>
+    <p class="lead">Drag to move. The app already did its best automatic match.</p>
+    <div class="stage" id="alStage"><canvas id="alCanvas"></canvas></div>
+    <div class="ctrls">
+      <div class="ctrl"><label>Match</label><span class="score" id="alScore">–</span></div>
+      <div class="ctrl"><label>Zoom</label><input type="range" id="alZoom" min="80" max="125" step="0.5" value="100"></div>
+      <div class="ctrl"><label>Rotate</label><input type="range" id="alRot" min="-6" max="6" step="0.1" value="0"></div>
+      <div class="ctrl"><label>Ghost</label><input type="range" id="alGhost" min="0" max="80" value="40"></div>
+      <div class="toggles"><button class="tg on" id="alTgOl">Outline</button><button class="tg" id="alAuto">Auto-match again</button><button class="tg" id="alReset">Reset</button></div>
+    </div>
+    <button class="btn pri" id="toResult">Looks lined up</button>
+    <button class="btn sec" id="redoAfter">Retake after</button>
+  </section>
+
+  <!-- STEP 4: result -->
+  <section class="step" id="stepResult">
+    <h2>Before &amp; after</h2>
+    <p class="lead">Drag the slider to compare.</p>
+    <div class="stage" id="cmpStage">
+      <canvas id="cmpAfter"></canvas>
+      <canvas id="cmpBefore"></canvas>
+      <div class="cmp-handle" id="cmpHandle"></div>
+      <div class="tag" style="left:10px">BEFORE</div><div class="tag" style="right:10px">AFTER</div>
+    </div>
+    <input type="range" id="cmpRange" min="0" max="100" value="50" style="width:100%;margin-top:10px">
+    <h2 style="margin-top:18px">Share image</h2>
+    <img id="finalImg" alt="Before and after image">
+    <p class="note" id="saveNote">Press and hold the image to save it to your phone.</p>
+    <button class="btn pri" id="dlBtn">Save or share image</button>
+    <div class="row"><button class="btn sec" id="resAdjust">Adjust match</button><button class="btn sec" id="restart">New job</button></div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+
+/* ---------------- Job + shot data ---------------- */
+const JOBS={
+  windows:{name:"Window Cleaning",shots:[
+    {t:"Full elevation",a:"From the yard or curb, straight on. Get the whole side of the house in the frame.",w:"Shows how big the job was. Your best main shot for ads.",tip:"Keep the sun behind you."},
+    {t:"Single pane at 45°",a:"Step to one side so you see the glass at an angle, 3–6 ft away.",w:"The angle shows streaks, spots and hard water. Straight on, you mostly see your own reflection.",tip:"Pick the dirtiest pane on the house."},
+    {t:"Sill & track detail",a:"Close up, looking down into the track and sill.",w:"Dirty tracks are the difference customers notice first.",tip:"Tap to focus before you shoot."},
+    {t:"Screen close-up",a:"Screen straight on, either held against the sky or laid flat.",w:"Dusty and clean screens look very different in photos.",tip:"Use the same background for both shots."}]},
+  gutters:{name:"Gutter Cleaning",shots:[
+    {t:"Inside the trough",a:"From the ladder, looking straight down into the gutter.",w:"Debris that turns into a clean channel makes the most dramatic before and after.",tip:"Only shoot from a secure ladder position."},
+    {t:"Gutter run from the ground",a:"Stand at the corner and shoot along the length of the gutter.",w:"Shows overflow, sagging and plants growing out.",tip:"Use the corner of the house as your landmark."},
+    {t:"Downspout outlet",a:"At ground level, on the bottom of the downspout.",w:"Shows the clog has been cleared all the way down.",tip:"Run a hose for the after shot if you can."},
+    {t:"Gutter face",a:"Straight on at the outside face, with the black streaks in view.",w:"Clean gutter faces read well from the street.",tip:"Only if you're cleaning the face too."}]},
+  pressure:{name:"Pressure Washing",shots:[
+    {t:"Driveway from the street",a:"Stand at the end of the driveway, phone at chest height. Get the whole slab in the frame.",w:"The main shot. Shows the full area you cleaned.",tip:"Stand on the curb line, the same spot both times."},
+    {t:"Low angle along the surface",a:"Hold the phone near knee height and shoot along the concrete.",w:"A low angle makes the color change stand out much more.",tip:"Shoot toward the house, not the street."},
+    {t:"Stain close-up",a:"Straight down over an oil, rust or mildew spot.",w:"Close-ups prove you handled the hard spots.",tip:"Put your foot at the edge of the frame for scale."},
+    {t:"Walkway / entry",a:"From the start of the walkway, looking toward the front door.",w:"How people see the house when they walk up.",tip:"Include the front step in the frame."}]},
+  exterior:{name:"Full Exterior",shots:[
+    {t:"Corner shot",a:"From the yard, aimed at a corner so you get two sides of the house.",w:"Shows the whole exterior package in one photo.",tip:"Stand far enough back to fit the roofline."},
+    {t:"Siding close-up",a:"Shoot along the siding at an angle, where the algae or mildew is.",w:"With light hitting the wall from the side, the streaks show up clearly.",tip:"North-facing walls are usually the worst."},
+    {t:"Soffit & eaves",a:"Looking up at the eaves from under the roofline.",w:"Cobwebs and mildew up there are easy to show off.",tip:"Hold the phone level, aimed straight up."},
+    {t:"Front entry",a:"Straight on at the front door, with the windows next to it.",w:"The spot customers care about most.",tip:"Close the door for both shots."}]},
+  storefront:{name:"Storefront / Commercial",shots:[
+    {t:"Storefront straight on",a:"From across the sidewalk. Get the whole storefront and sign in the frame.",w:"The property manager sees the whole result in one photo.",tip:"Shoot at the same time of day so the glare matches."},
+    {t:"Door glass close-up",a:"Door at handle height, slightly angled.",w:"Fingerprints and smudges show up best at an angle.",tip:"Prop the door closed for both shots."},
+    {t:"Window run at an angle",a:"Stand at one end and shoot down the row of windows at 30–45°.",w:"Shows every pane cleaned, with no streaks.",tip:"Shoot with the sun behind you."},
+    {t:"Entry walkway",a:"From the parking lot, facing the entry.",w:"Gum and stains on the sidewalk are a strong selling point for HOAs and businesses.",tip:"Only if you pressure washed it."}]}
+};
+
+/* ---------------- State ---------------- */
+// T maps BEFORE-frame coords -> AFTER/live-frame coords (analysis units): q = c + s*Rot(r)*(p-c) + d
+const S={job:null,shot:null,W:0,H:0,before:null,outline:null,roi:null,roiA:null,fPts:null,
+  after:null,aDil:null,T:{dx:0,dy:0,s:1,r:0},stream:null,camMode:null,loop:0,ema:null,wasGood:false};
+const AW=240; let AH=180;
+const ID=()=>({dx:0,dy:0,s:1,r:0});
+
+/* ---------------- UI helpers ---------------- */
+const steps=["stepJob","stepBefore","stepCam","stepBeforeReview","stepAfter","stepAlign","stepResult"];
+const prog={stepJob:1,stepBefore:2,stepCam:0,stepBeforeReview:2,stepAfter:3,stepAlign:3,stepResult:4};
+function show(id){
+  steps.forEach(s=>$("#"+s).classList.toggle("active",s===id));
+  let p=prog[id]||(S.camMode==="after"?3:2);
+  for(let i=1;i<=4;i++) $("#s"+i).classList.toggle("on",i<=p);
+  window.scrollTo(0,0);
+}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200);}
+function mk(w,h){const c=document.createElement("canvas");c.width=w;c.height=h;return c;}
+function setAspect(el,a){el.style.setProperty("--a",a);}
+function coverCrop(sw,sh,a){ if(sw/sh>a){const cw=sh*a;return{x:(sw-cw)/2,y:0,w:cw,h:sh};} const ch=sw/a;return{x:0,y:(sh-ch)/2,w:sw,h:ch}; }
+
+/* ---------------- Image analysis ---------------- */
+const _ctx={};
+function ctxFor(w,h){const k=w+"x"+h;if(!_ctx[k]){_ctx[k]=mk(w,h).getContext("2d",{willReadFrequently:true});}return _ctx[k];}
+function blur(g,w,h){
+  const t=new Float32Array(g.length),o=new Float32Array(g.length);
+  for(let y=0;y<h;y++){const r=y*w;for(let x=0;x<w;x++){const a=g[r+Math.max(0,x-1)],b=g[r+x],c=g[r+Math.min(w-1,x+1)];t[r+x]=(a+b+c)/3;}}
+  for(let y=0;y<h;y++){const u=Math.max(0,y-1)*w,m=y*w,d=Math.min(h-1,y+1)*w;for(let x=0;x<w;x++)o[m+x]=(t[u+x]+t[m+x]+t[d+x])/3;}
+  return o;
+}
+// Gradient magnitude (Sobel) of a source drawn at w x h
+function sobel(src,crop,w,h,passes){
+  const x=ctxFor(w,h);x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";
+  if(crop)x.drawImage(src,crop.x,crop.y,crop.w,crop.h,0,0,w,h);else x.drawImage(src,0,0,w,h);
+  const d=x.getImageData(0,0,w,h).data,n=w*h;let g=new Float32Array(n);
+  for(let i=0;i<n;i++)g[i]=.299*d[i*4]+.587*d[i*4+1]+.114*d[i*4+2];
+  for(let p=0;p<passes;p++)g=blur(g,w,h);
+  const m=new Float32Array(n);
+  for(let y=1;y<h-1;y++)for(let xx=1;xx<w-1;xx++){
+    const i=y*w+xx;
+    const gx=-g[i-w-1]-2*g[i-1]-g[i+w-1]+g[i-w+1]+2*g[i+1]+g[i+w+1];
+    const gy=-g[i-w-1]-2*g[i-w]-g[i-w+1]+g[i+w-1]+2*g[i+w]+g[i+w+1];
+    m[i]=Math.sqrt(gx*gx+gy*gy);
+  }
+  return m;
+}
+// Keep the strongest `keep` fraction of edges inside roi (pixel rect), zero elsewhere
+function thresh(m,w,h,keep,roi){
+  roi=roi||{x:0,y:0,w:w,h:h};
+  const x0=Math.max(1,Math.floor(roi.x)),y0=Math.max(1,Math.floor(roi.y)),x1=Math.min(w-1,Math.ceil(roi.x+roi.w)),y1=Math.min(h-1,Math.ceil(roi.y+roi.h));
+  let max=0;for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){const v=m[y*w+x];if(v>max)max=v;}
+  const out=new Uint8Array(w*h);if(max<=0)return out;
+  const B=1024,hist=new Uint32Array(B);let n=0;
+  for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){hist[Math.min(B-1,(m[y*w+x]/max*B)|0)]++;n++;}
+  let acc=0,t=B-1;const target=keep*n;for(;t>0;t--){acc+=hist[t];if(acc>=target)break;}
+  const thr=Math.max(t/B*max,18);
+  for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)out[y*w+x]=m[y*w+x]>=thr?1:0;
+  return out;
+}
+// Drop small specks: keep only connected edge pieces whose span is at least minExt pixels
+function clean(b,w,h,minExt){
+  const lab=new Int32Array(w*h),stack=new Int32Array(w*h),out=new Uint8Array(w*h);let id=0;
+  for(let i=0;i<b.length;i++){
+    if(!b[i]||lab[i])continue;id++;let sp=0,mem=[];stack[sp++]=i;lab[i]=id;
+    let minx=w,maxx=0,miny=h,maxy=0;
+    while(sp){const j=stack[--sp];mem.push(j);const x=j%w,y=(j/w)|0;
+      if(x<minx)minx=x;if(x>maxx)maxx=x;if(y<miny)miny=y;if(y>maxy)maxy=y;
+      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const X=x+dx,Y=y+dy;if(X<0||Y<0||X>=w||Y>=h)continue;const k=Y*w+X;if(b[k]&&!lab[k]){lab[k]=id;stack[sp++]=k;}}}
+    if(Math.max(maxx-minx,maxy-miny)>=minExt)for(const j of mem)out[j]=1;
+  }
+  return out;
+}
+function dilate(b,w,h){
+  const t=new Uint8Array(b.length),o=new Uint8Array(b.length);
+  for(let y=0;y<h;y++){const r=y*w;for(let x=0;x<w;x++)t[r+x]=b[r+x]|(x>0?b[r+x-1]:0)|(x<w-1?b[r+x+1]:0);}
+  for(let y=0;y<h;y++){const r=y*w;for(let x=0;x<w;x++)o[r+x]=t[r+x]|(y>0?t[r+x-w]:0)|(y<h-1?t[r+x+w]:0);}
+  return o;
+}
+function pts(b,w,h,maxN){let c=0;for(let i=0;i<b.length;i++)c+=b[i];const step=Math.max(1,Math.ceil(c/(maxN||1e9)));
+  const arr=[];let k=0;for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(b[y*w+x]){if(k++%step===0)arr.push(x,y);}return Int16Array.from(arr);}
+function covIn(b,r){let c=0,n=0;const x0=Math.max(0,r.x|0),y0=Math.max(0,r.y|0),x1=Math.min(AW,Math.ceil(r.x+r.w)),y1=Math.min(AH,Math.ceil(r.y+r.h));
+  for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){c+=b[y*AW+x];n++;}return n?c/(2*n):0;}
+
+// Fraction of before-object points that land on edges in the other frame under T
+function hitFrac(P,M,T){
+  const n=P.length/2;if(!n)return 0;const cx=AW/2,cy=AH/2,c=Math.cos(T.r),s=Math.sin(T.r);let h=0;
+  for(let i=0;i<n;i++){const x=P[2*i]-cx,y=P[2*i+1]-cy;
+    const X=Math.round(cx+T.s*(c*x-s*y)+T.dx),Y=Math.round(cy+T.s*(s*x+c*y)+T.dy);
+    if(X>=0&&X<AW&&Y>=0&&Y<AH)h+=M[Y*AW+X];}
+  return h/(2*n);
+}
+// 0..100, corrected for how busy the other frame is (random-chance hits)
+function matchScore(M,T){
+  const cv=covIn(M,S.roiA);const r=hitFrac(S.fPts,M,T);
+  const rn=(r-cv)/Math.max(0.05,1-cv);
+  return Math.max(0,Math.min(100,Math.round(rn/0.75*100)));
+}
+function search(M,R,step,scales,rots,around){
+  around=around||{dx:0,dy:0};const P=S.fPts,n=P.length/2,cx=AW/2,cy=AH/2;
+  let best={v:-1,dx:0,dy:0,s:1,r:0};if(!n)return best;
+  const tx=new Int16Array(n),ty=new Int16Array(n);
+  for(const r of rots){const c=Math.cos(r),sn=Math.sin(r);
+    for(const s of scales){
+      for(let i=0;i<n;i++){const x=P[2*i]-cx,y=P[2*i+1]-cy;tx[i]=Math.round(cx+s*(c*x-sn*y));ty[i]=Math.round(cy+s*(sn*x+c*y));}
+      for(let dy=around.dy-R;dy<=around.dy+R;dy+=step)for(let dx=around.dx-R;dx<=around.dx+R;dx+=step){
+        let h=0;for(let i=0;i<n;i++){const X=tx[i]+dx,Y=ty[i]+dy;if(X>=0&&X<AW&&Y>=0&&Y<AH)h+=M[Y*AW+X];}
+        const v=h/(2*n)-0.0005*(Math.abs(dx)+Math.abs(dy))-0.04*Math.abs(s-1)-0.02*Math.abs(r);
+        if(v>best.v)best={v,dx,dy,s,r};
+      }}}
+  return best;
+}
+function frameEdges(src,crop){const m=sobel(src,crop,AW,AH,1);const e=thresh(m,AW,AH,0.09,null),d=dilate(e,AW,AH);for(let i=0;i<d.length;i++)d[i]+=e[i];return d;}
+
+/* ---------------- Before + object selection ---------------- */
+function setBefore(src,sw,sh){
+  const k=Math.min(1,1600/Math.max(sw,sh));
+  S.W=Math.round(sw*k);S.H=Math.round(sh*k);
+  const c=mk(S.W,S.H);const x=c.getContext("2d");x.imageSmoothingQuality="high";x.drawImage(src,0,0,S.W,S.H);
+  S.before=c;AH=Math.max(40,Math.round(AW*S.H/S.W));
+  S.beforeUrl=c.toDataURL("image/jpeg",0.8);
+  S.roi=null;S.mA=sobel(c,null,AW,AH,1);
+  const ow=Math.min(480,S.W),oh=Math.round(ow*S.H/S.W);S.oW=ow;S.oH=oh;S.mD=sobel(c,null,ow,oh,1);
+  computeFocus();
+  showBeforeReview();
+}
+// Build the matching points + display outline for the chosen object (or the whole picture)
+function computeFocus(){
+  const r=S.roi;
+  const roiA=r?{x:r.x*AW,y:r.y*AH,w:r.w*AW,h:r.h*AH}:{x:0,y:0,w:AW,h:AH};
+  let bA=thresh(S.mA,AW,AH,r?0.16:0.08,roiA);
+  bA=clean(bA,AW,AH,Math.max(4,Math.round(0.12*Math.min(roiA.w,roiA.h))));
+  S.fPts=pts(bA,AW,AH,700);
+  const mg=0.08;S.roiA={x:roiA.x-roiA.w*mg,y:roiA.y-roiA.h*mg,w:roiA.w*(1+2*mg),h:roiA.h*(1+2*mg)};
+  // display outline
+  const w=S.oW,h=S.oH,oc=mk(w,h),ox=oc.getContext("2d"),id=ox.createImageData(w,h);
+  const bg=clean(thresh(S.mD,w,h,0.07,null),w,h,Math.round(w*0.04));
+  let fg=null;
+  if(r){const rd={x:r.x*w,y:r.y*h,w:r.w*w,h:r.h*h};
+    fg=dilate(clean(thresh(S.mD,w,h,0.16,rd),w,h,Math.max(6,Math.round(0.12*Math.min(rd.w,rd.h)))),w,h);}
+  for(let i=0;i<w*h;i++){
+    if(fg&&fg[i]){id.data[i*4]=0;id.data[i*4+1]=229;id.data[i*4+2]=255;id.data[i*4+3]=255;}
+    else if(bg[i]){id.data[i*4]=255;id.data[i*4+1]=255;id.data[i*4+2]=255;id.data[i*4+3]=fg?70:230;
+      if(!fg){id.data[i*4]=0;id.data[i*4+1]=229;}}
+  }
+  ox.putImageData(id,0,0);S.outline=oc;
+}
+function showBeforeReview(){
+  setAspect($("#revStage"),S.W/S.H);
+  const ri=$("#revImg");ri.width=S.W;ri.height=S.H;ri.getContext("2d").drawImage(S.before,0,0);
+  drawRevOutline();updateSelBox();
+  show("stepBeforeReview");
+}
+function drawRevOutline(){const ro=$("#revOl");ro.width=S.outline.width;ro.height=S.outline.height;ro.getContext("2d").drawImage(S.outline,0,0);}
+function updateSelBox(tmp){
+  const r=tmp||S.roi,b=$("#selBox");
+  if(!r){b.classList.add("hidden");return;}
+  b.classList.remove("hidden");b.style.left=r.x*100+"%";b.style.top=r.y*100+"%";b.style.width=r.w*100+"%";b.style.height=r.h*100+"%";
+}
+(function selectSetup(){
+  const st=$("#revStage");let start=null,cur=null;
+  const pos=e=>{const b=st.getBoundingClientRect();return{x:Math.min(1,Math.max(0,(e.clientX-b.left)/b.width)),y:Math.min(1,Math.max(0,(e.clientY-b.top)/b.height))};};
+  st.addEventListener("pointerdown",e=>{start=pos(e);cur=null;st.setPointerCapture(e.pointerId);});
+  st.addEventListener("pointermove",e=>{if(!start)return;const p=pos(e);
+    cur={x:Math.min(start.x,p.x),y:Math.min(start.y,p.y),w:Math.abs(p.x-start.x),h:Math.abs(p.y-start.y)};updateSelBox(cur);});
+  st.addEventListener("pointerup",()=>{
+    if(!start)return;let r=cur;
+    if(!r||r.w<0.05||r.h<0.03){ // a tap: make a box around the tap point
+      const bw=0.4,bh=0.22;r={x:Math.min(1-bw,Math.max(0,start.x-bw/2)),y:Math.min(1-bh,Math.max(0,start.y-bh/2)),w:bw,h:bh};}
+    start=null;S.roi=r;computeFocus();drawRevOutline();updateSelBox();
+    $("#revStatus").textContent=S.fPts.length/2<25?"Not much to lock onto in that box. Try a box around an object with clear edges.":"Locked onto the object in the box. Drag again to change it.";
+  });
+  st.addEventListener("pointercancel",()=>{start=null;updateSelBox();});
+})();
+
+/* ---------------- Camera ---------------- */
+async function openCam(mode){
+  S.camMode=mode;
+  const alertEl=mode==="before"?$("#beforeAlert"):$("#afterAlert");
+  alertEl.style.display="none";
+  try{
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("no media");
+    S.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"},width:{ideal:1920},height:{ideal:1080}},audio:false});
+  }catch(e){
+    const inClaude=/claude\.ai|claudeusercontent|anthropic/.test(document.referrer+location.host);
+    alertEl.innerHTML="<b>Camera didn't open.</b> "+(inClaude
+      ?"The Claude app blocks the camera. Open the app from its own web link instead."
+      :"Allow camera access for this site in your browser settings, then try again. For now you can use <b>Take photo with phone camera</b>.");
+    alertEl.style.display="block";return;
+  }
+  const v=$("#video");v.srcObject=S.stream;try{await v.play();}catch(e){}
+  if(!v.videoWidth)await new Promise(r=>v.addEventListener("loadedmetadata",r,{once:true}));
+  const isAfter=mode==="after";
+  $("#camTitle").textContent=isAfter?"Line up the after shot":"Before photo";
+  $("#camLead").textContent=isAfter?"Move until the blue outline sits right on the real object and the bar turns green.":"Frame the shot, then tap the button.";
+  ["#camGhost","#camOl","#hud","#camCtrls"].forEach(s=>$(s).classList.toggle("hidden",!isAfter));
+  $("#shutter").classList.remove("go");
+  if(isAfter){
+    setAspect($("#camStage"),S.W/S.H);
+    $("#camGhost").src=S.beforeUrl;$("#camGhost").style.opacity=$("#camGhostOp").value/100;
+    const o=$("#camOl");o.width=S.outline.width;o.height=S.outline.height;o.getContext("2d").drawImage(S.outline,0,0);
+    S.ema=null;S.wasGood=false;startLoop();
+  }else{
+    setAspect($("#camStage"),v.videoWidth/v.videoHeight);
+  }
+  show("stepCam");
+}
+function stopCam(){
+  clearTimeout(S.loop);S.loop=0;
+  if(S.stream){S.stream.getTracks().forEach(t=>t.stop());S.stream=null;}
+  $("#video").srcObject=null;
+}
+function startLoop(){
+  const v=$("#video");
+  const tick=()=>{
+    if(!S.stream)return;
+    if(v.videoWidth){
+      const M=frameEdges(v,coverCrop(v.videoWidth,v.videoHeight,S.W/S.H));
+      const sc=matchScore(M,ID());
+      let b=search(M,24,3,[0.92,0.96,1,1.04,1.08],[0]);
+      b=search(M,2,1,[b.s-0.02,b.s,b.s+0.02],[0],{dx:b.dx,dy:b.dy});
+      const e=S.ema,a=0.45;
+      S.ema=e?{sc:e.sc*(1-a)+sc*a,dx:e.dx*(1-a)+b.dx*a,dy:e.dy*(1-a)+b.dy*a,s:e.s*(1-a)+b.s*a}:{sc,dx:b.dx,dy:b.dy,s:b.s};
+      renderHud();
+    }
+    S.loop=setTimeout(tick,140);
+  };
+  tick();
+}
+function renderHud(){
+  const e=S.ema,pct=Math.round(e.sc);
+  const fill=$("#mFill");fill.style.width=pct+"%";
+  const good=pct>=80,ok=pct>=50;
+  fill.style.background=good?"var(--ok)":ok?"var(--warn)":"var(--bad)";
+  $("#mTxt").textContent="Match "+pct+"%"+(good?" · lined up":ok?" · close":"");
+  // e.dx>0: the object sits to the right of where it was -> aim right, etc.
+  const h=[],t=Math.max(2,AW*0.015);
+  if(e.dx>t)h.push("Aim right →");else if(e.dx<-t)h.push("← Aim left");
+  if(e.dy>t)h.push("↓ Tilt down");else if(e.dy<-t)h.push("↑ Tilt up");
+  if(e.s>1.03)h.push("Step back");else if(e.s<0.97)h.push("Step closer");
+  $("#hint").textContent=good?"Hold steady and take it":(h.length?h.join(" · "):(ok?"Almost there":"Find the outline"));
+  $("#shutter").classList.toggle("go",good);
+  if(good&&!S.wasGood&&navigator.vibrate){try{navigator.vibrate(40);}catch(_){}}
+  S.wasGood=good;
+}
+function capture(){
+  const v=$("#video");if(!v.videoWidth)return;
+  if(S.camMode==="before"){
+    const c=mk(v.videoWidth,v.videoHeight);c.getContext("2d").drawImage(v,0,0);
+    stopCam();setBefore(c,c.width,c.height);
+  }else{
+    const crop=coverCrop(v.videoWidth,v.videoHeight,S.W/S.H);
+    const c=mk(Math.round(crop.w),Math.round(crop.h));c.getContext("2d").drawImage(v,crop.x,crop.y,crop.w,crop.h,0,0,c.width,c.height);
+    stopCam();setAfter(c,c.width,c.height,true);
+  }
+}
+
+/* ---------------- After + align ---------------- */
+function setAfter(src,sw,sh,fromLive){
+  const crop=coverCrop(sw,sh,S.W/S.H);
+  const c=mk(S.W,S.H);const x=c.getContext("2d");x.imageSmoothingQuality="high";
+  x.drawImage(src,crop.x,crop.y,crop.w,crop.h,0,0,S.W,S.H);
+  S.after=c;S.aDil=frameEdges(c,null);
+  autoAlign(fromLive);
+  setAspect($("#alStage"),S.W/S.H);
+  const k=Math.min(1,900/Math.max(S.W,S.H));const ac=$("#alCanvas");ac.width=Math.round(S.W*k);ac.height=Math.round(S.H*k);
+  show("stepAlign");renderAlign();
+}
+function autoAlign(fromLive){
+  const base=matchScore(S.aDil,ID());
+  const scales=[];for(let s=0.84;s<=1.161;s+=0.04)scales.push(+s.toFixed(2));
+  const rots=[-0.035,0,0.035];
+  let b=search(S.aDil,fromLive?18:54,3,scales,rots);
+  b=search(S.aDil,3,1,[b.s-0.02,b.s,b.s+0.02],[b.r-0.017,b.r,b.r+0.017],{dx:b.dx,dy:b.dy});
+  const T={dx:b.dx,dy:b.dy,s:b.s,r:b.r};
+  S.T=matchScore(S.aDil,T)>base+3?T:ID();   // keep the auto-match only if it actually helps
+  syncAlignCtrls();
+}
+function syncAlignCtrls(){$("#alZoom").value=(100/S.T.s).toFixed(1);$("#alRot").value=(-S.T.r*180/Math.PI).toFixed(1);}
+// Draw the after photo moved into the before photo's frame (inverse of T)
+function drawAligned(ctx,w,h){
+  const k=w/S.W,u=S.W/AW,cx=S.W/2,cy=S.H/2,T=S.T;
+  ctx.fillStyle="#0b1f33";ctx.fillRect(0,0,w,h);
+  ctx.save();ctx.scale(k,k);ctx.translate(cx,cy);ctx.scale(1/T.s,1/T.s);ctx.rotate(-T.r);ctx.translate(-cx-T.dx*u,-cy-T.dy*u);
+  ctx.imageSmoothingQuality="high";ctx.drawImage(S.after,0,0);ctx.restore();
+}
+let alOl=true;
+function renderAlign(){
+  const c=$("#alCanvas"),x=c.getContext("2d");drawAligned(x,c.width,c.height);
+  const g=$("#alGhost").value/100;if(g>0){x.globalAlpha=g;x.drawImage(S.before,0,0,c.width,c.height);x.globalAlpha=1;}
+  if(alOl){x.save();x.shadowColor="#000";x.shadowBlur=2;x.drawImage(S.outline,0,0,c.width,c.height);x.restore();}
+  $("#alScore").textContent=matchScore(S.aDil,S.T)+"%";
+}
+(function dragSetup(){
+  const c=$("#alCanvas");let last=null;
+  c.addEventListener("pointerdown",e=>{last={x:e.clientX,y:e.clientY};c.setPointerCapture(e.pointerId);});
+  c.addEventListener("pointermove",e=>{if(!last)return;const k=AW/c.clientWidth*S.T.s;
+    S.T.dx-=(e.clientX-last.x)*k;S.T.dy-=(e.clientY-last.y)*k;last={x:e.clientX,y:e.clientY};renderAlign();});
+  const end=()=>{last=null;};c.addEventListener("pointerup",end);c.addEventListener("pointercancel",end);
+})();
+
+/* ---------------- Result ---------------- */
+let finalBlob=null;
+// Area of the frame that the moved after photo fully covers, so the export has no empty bands
+function overlapRect(){
+  const u=S.W/AW,T=S.T,cx=S.W/2,cy=S.H/2,c=Math.cos(-T.r),s=Math.sin(-T.r);
+  const m=(x,y)=>{x=(x-cx-T.dx*u)/T.s;y=(y-cy-T.dy*u)/T.s;return[cx+c*x-s*y,cy+s*x+c*y];};
+  const tl=m(0,0),tr=m(S.W,0),bl=m(0,S.H),br=m(S.W,S.H);
+  const x0=Math.max(0,tl[0],bl[0]),x1=Math.min(S.W,tr[0],br[0]),y0=Math.max(0,tl[1],tr[1]),y1=Math.min(S.H,bl[1],br[1]);
+  if(x1-x0<S.W*0.4||y1-y0<S.H*0.4)return{x:0,y:0,w:S.W,h:S.H};
+  const x=Math.ceil(x0+1),y=Math.ceil(y0+1);
+  return{x,y,w:Math.floor(x1-1)-x,h:Math.floor(y1-1)-y};
+}
+function buildResult(){
+  const full=mk(S.W,S.H);drawAligned(full.getContext("2d"),S.W,S.H);
+  const R=overlapRect(),W=R.w,H=R.h;
+  const B=mk(W,H),A=mk(W,H);
+  B.getContext("2d").drawImage(S.before,R.x,R.y,W,H,0,0,W,H);
+  A.getContext("2d").drawImage(full,R.x,R.y,W,H,0,0,W,H);
+  const cb=$("#cmpBefore"),ca=$("#cmpAfter");
+  const k=Math.min(1,1000/Math.max(W,H));
+  [cb,ca].forEach(c=>{c.width=Math.round(W*k);c.height=Math.round(H*k);});
+  cb.getContext("2d").drawImage(B,0,0,cb.width,cb.height);
+  ca.getContext("2d").drawImage(A,0,0,ca.width,ca.height);
+  setAspect($("#cmpStage"),W/H);setCmp(50);$("#cmpRange").value=50;
+  const ps=1200/Math.max(W,H),pw=Math.round(W*ps),ph=Math.round(H*ps);
+  const portrait=H>=W,gap=8;
+  const bw=portrait?pw*2+gap:pw,bh=portrait?ph:ph*2+gap,foot=Math.round(Math.max(bw,bh)*0.055);
+  const ow=bw,oh=bh+foot;
+  const o=mk(ow,oh),x=o.getContext("2d");x.fillStyle="#0b1f33";x.fillRect(0,0,ow,oh);
+  x.imageSmoothingQuality="high";
+  x.drawImage(B,0,0,pw,ph);
+  const ax=portrait?pw+gap:0,ay=portrait?0:ph+gap;
+  x.drawImage(A,ax,ay,pw,ph);
+  const fs=Math.round(Math.max(pw,ph)*0.032),font="-apple-system,Segoe UI,Roboto,Arial,sans-serif";
+  const tag=(t,X,Y)=>{x.font="700 "+fs+"px "+font;const tw=x.measureText(t).width;
+    const p=fs*0.55;x.fillStyle="rgba(11,31,51,.85)";x.fillRect(X+fs*.6,Y+fs*.6,tw+p*2,fs+p*1.4);x.fillStyle="#fff";x.textBaseline="top";x.fillText(t,X+fs*.6+p,Y+fs*.6+p*.75);};
+  tag("BEFORE",0,0);tag("AFTER",ax,ay);
+  const fy=oh-foot;x.fillStyle="#0b1f33";x.fillRect(0,fy,ow,foot);
+  x.fillStyle="#00e5ff";x.fillRect(0,fy,ow,Math.max(3,foot*0.06));
+  x.textBaseline="middle";x.fillStyle="#fff";x.font="700 "+Math.round(foot*0.36)+"px "+font;
+  x.textAlign="left";x.fillText("Squeegee Bros Window Cleaning",foot*0.4,fy+foot*0.53);
+  x.textAlign="right";x.font="600 "+Math.round(foot*0.3)+"px "+font;x.fillText("321-271-6465",ow-foot*0.4,fy+foot*0.53);
+  x.textAlign="left";
+  o.toBlob(b=>{finalBlob=b;$("#finalImg").src=URL.createObjectURL(b);},"image/jpeg",0.92);
+  show("stepResult");
+}
+function setCmp(v){$("#cmpBefore").style.clipPath="inset(0 "+(100-v)+"% 0 0)";$("#cmpHandle").style.left="calc("+v+"% - 1.5px)";}
+async function download(){
+  if(!finalBlob)return;
+  const name="squeegee-bros-before-after-"+(S.job||"job")+".jpg";
+  const file=new File([finalBlob],name,{type:"image/jpeg"});
+  // On phones, the share sheet lets you save to Photos or send it straight to a customer
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file]});return;}catch(e){if(e&&e.name==="AbortError")return;}
+  }
+  if(window.claude&&typeof window.claude.use==="function"){
+    try{const d=await window.claude.use("downloads");
+      if(d){await d.save({filename:name,data:finalBlob});toast("Saved");return;}
+    }catch(e){if(e&&e.code==="declined")return;}
+  }
+  const a=document.createElement("a");a.href=URL.createObjectURL(finalBlob);a.download=name;document.body.appendChild(a);a.click();a.remove();
+}
+
+/* ---------------- File inputs ---------------- */
+function loadFile(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file);const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=u;});}
+$("#beforeFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;const i=await loadFile(f);setBefore(i,i.naturalWidth,i.naturalHeight);e.target.value="";});
+$("#afterFile").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;const i=await loadFile(f);setAfter(i,i.naturalWidth,i.naturalHeight,false);e.target.value="";});
+
+/* ---------------- Step 1 wiring ---------------- */
+const chips=$("#chips");
+Object.entries(JOBS).forEach(([k,j])=>{const b=document.createElement("button");b.className="chip";b.textContent=j.name;b.onclick=()=>pickJob(k,b);chips.appendChild(b);});
+function pickJob(k,btn){
+  S.job=k;S.shot=null;$("#toBefore").disabled=true;
+  chips.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c===btn));
+  const w=$("#shots");w.innerHTML="";
+  JOBS[k].shots.forEach((s,i)=>{const d=document.createElement("div");d.className="shot";
+    d.innerHTML='<div class="t"><span>'+s.t+'</span><span class="n">'+(i===0?"Top pick":"Shot "+(i+1))+'</span></div><div class="a">'+s.a+'</div><div class="w">'+s.w+'</div><div class="tip"><b>Tip:</b> '+s.tip+'</div>';
+    d.onclick=()=>{S.shot=i;w.querySelectorAll(".shot").forEach(x=>x.classList.toggle("on",x===d));$("#toBefore").disabled=false;};
+    w.appendChild(d);});
+  $("#shotWrap").classList.remove("hidden");
+}
+$("#toBefore").onclick=()=>{const s=JOBS[S.job].shots[S.shot];$("#beforeShotTxt").textContent=s.t+": "+s.a;show("stepBefore");};
+$("#backJob").onclick=()=>show("stepJob");
+$("#beforeLive").onclick=()=>openCam("before");
+$("#shutter").onclick=capture;
+$("#camCancel").onclick=()=>{const m=S.camMode;stopCam();show(m==="after"?"stepAfter":"stepBefore");};
+$("#camGhostOp").oninput=e=>{$("#camGhost").style.opacity=e.target.value/100;};
+$("#camTgOl").onclick=e=>{const on=!e.target.classList.contains("on");e.target.classList.toggle("on",on);$("#camOl").classList.toggle("hidden",!on);};
+$("#revTg").onclick=e=>{const on=!e.target.classList.contains("on");e.target.classList.toggle("on",on);e.target.textContent=on?"Outline on":"Outline off";$("#revOl").style.display=on?"":"none";};
+$("#toAfter").onclick=()=>show("stepAfter");
+$("#revWhole").onclick=()=>{S.roi=null;computeFocus();drawRevOutline();updateSelBox();$("#revStatus").textContent="Using the whole picture. Drag a box to lock onto one object.";};
+$("#redoBefore").onclick=()=>show("stepBefore");
+$("#backReview").onclick=()=>show("stepBeforeReview");
+$("#afterLive").onclick=()=>openCam("after");
+$("#alZoom").oninput=e=>{S.T.s=100/e.target.value;renderAlign();};
+$("#alRot").oninput=e=>{S.T.r=-e.target.value*Math.PI/180;renderAlign();};
+$("#alGhost").oninput=renderAlign;
+$("#alTgOl").onclick=e=>{alOl=!alOl;e.target.classList.toggle("on",alOl);renderAlign();};
+$("#alAuto").onclick=()=>{autoAlign(false);renderAlign();toast("Auto-matched");};
+$("#alReset").onclick=()=>{S.T=ID();syncAlignCtrls();renderAlign();};
+$("#toResult").onclick=buildResult;
+$("#redoAfter").onclick=()=>show("stepAfter");
+$("#cmpRange").oninput=e=>setCmp(+e.target.value);
+$("#dlBtn").onclick=download;
+$("#resAdjust").onclick=()=>{show("stepAlign");renderAlign();};
+$("#restart").onclick=()=>{location.hash="";location.reload();};
+
+// test hook
+window.__lineup={S,setBefore,setAfter,matchScore,search,show,buildResult,computeFocus,_edges:c=>frameEdges(c,null)};
+})();
+</script>
+</body>
+</html>
